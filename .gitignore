@@ -191,34 +191,7 @@ Backup/*
 # Log files written by the Editor for certain systems
 /Logs
 
-# Raw Content file types
-## Models
-*.fbx
-*.3ds
-*.blend
-*.blend1
-*.blend2
-*.blend3
-*.blend4
-*.gltf
-*.obj
-*.ztl
-*.spm
-*.st
-*.srt
-## Textures
-*.jpg
-*.psd
-*.xcf
-*.exr
-*.hdr
-*.bmp
-*.kra
-*.tga
-*.spp
-*.xcf
-*.assbin
-*.png
+
 
 # some PNGs should be here
 !Content/Splash/Splash*.png
@@ -322,6 +295,3 @@ RELEASE_MSG
 
 .vsconfig
 .idea/*
-
-#Just for CPP - no Content
-/Content
