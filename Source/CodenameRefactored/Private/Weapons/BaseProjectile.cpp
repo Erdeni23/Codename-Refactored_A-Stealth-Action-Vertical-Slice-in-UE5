@@ -2,16 +2,32 @@
 
 
 #include "Weapons/BaseProjectile.h"
+#include "Components/BoxComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
+#include "Components/StaticMeshComponent.h"
 
-// Sets default values
+
+
 ABaseProjectile::ABaseProjectile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+ 	
 	PrimaryActorTick.bCanEverTick = true;
 
+	/* Устанавливаем коллизию как Root Component для того,
+	 * чтобы ProjectileMovementComponent корректно работал при вводе/выводе из пула */
+	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
+	RootComponent = BoxCollision;
+
+	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
+	ProjectileMesh->SetupAttachment(RootComponent);
+
+	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
+	ProjectileMovementComponent->UpdatedComponent = RootComponent;
+
+	
 }
 
-// Called when the game starts or when spawned
+
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
