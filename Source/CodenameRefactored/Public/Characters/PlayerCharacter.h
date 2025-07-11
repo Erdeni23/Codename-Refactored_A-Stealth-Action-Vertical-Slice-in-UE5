@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-
-//components
-#include "Camera/CameraComponent.h"
-
-
 #include "PlayerCharacter.generated.h"
 
+
+class UCapsuleComponent;
+class UPlayerCameraManager;
+class UCharacterMovementComponent;
+class UCameraComponent;
 
 
 UCLASS()
@@ -24,10 +24,42 @@ public:
 
 protected:
 	
-	virtual void BeginPlay() override;
+    //Components
+	UPROPERTY(BlueprintReadOnly, Category = "Components")
+	APlayerCameraManager* PlayerCameraManager;
 
-	UPROPERTY(BlueprintReadWrite, Category = "PlayerCamera")
-	UCameraComponent* PlayerCamera;
+	//Variables
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	bool bIsSliding = false;
+
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	bool bIsStandingUp = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	float defaultCameraViewPitchMax = 80.0f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	float defaultCameraViewPitchMin = -75.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	float defaultCameraViewYawMax = 359.998291f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	float defaultCameraViewYawMin = 0.0f;
+	
+	FTimerHandle Delay;
+	
+	//Functions
+	virtual void BeginPlay() override;
+	
+	UFUNCTION(BlueprintCallable)
+	void SlideCrouch();
+
+	UFUNCTION(BlueprintCallable)
+	void CrouchSlideCompleted();
+	
+	void DoCrouch();
+
 
 public:	
 	
