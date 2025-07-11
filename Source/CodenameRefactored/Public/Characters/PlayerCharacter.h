@@ -6,7 +6,6 @@
 #include "GameFramework/Character.h"
 #include "PlayerCharacter.generated.h"
 
-
 class UCapsuleComponent;
 class UPlayerCameraManager;
 class UCharacterMovementComponent;
@@ -25,7 +24,7 @@ public:
 protected:
 	
     //Components
-	UPROPERTY(BlueprintReadOnly, Category = "Components")
+	UPROPERTY()
 	APlayerCameraManager* PlayerCameraManager;
 
 	//Variables
