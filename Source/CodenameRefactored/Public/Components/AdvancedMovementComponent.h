@@ -7,10 +7,11 @@
 #include "AdvancedMovementComponent.generated.h"
 
 class ACharacter;
+class APlayerController;
 class UCharacterMovementComponent;
 class UCapsuleComponent;
 class UPlayerCameraManager;
-class UCameraComponent;
+
 
 
 UCLASS( ClassGroup=(Movement), meta=(BlueprintSpawnableComponent) )
@@ -23,28 +24,66 @@ public:
 	UAdvancedMovementComponent();
 
 protected:
-
+	//Функции
 	virtual void BeginPlay() override;
 
+
+	
+	//Переменные, доступные через блюпринты для Чтения/ЧтенияЗаписи
+
+	UPROPERTY(BlueprintReadOnly, Category = "State")
+	bool bIsSliding = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	float DefaultCameraViewPitchMax = 80.0f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	float DefaultCameraViewPitchMin = -75.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	float DefaultCameraViewYawMax = 359.998291f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	float DefaultCameraViewYawMin = 0.0f;
+	
+private:
+	
+	//Данные о владельце/компоненты
 	UPROPERTY()
-	ACharacter* OwnerCharacter;
+	ACharacter* OwnerCharacter = nullptr;
 	
 	UPROPERTY()
-	UCharacterMovementComponent* OwnerMovementComponent;
+	UCharacterMovementComponent* OwnerMovementComponent = nullptr;
 
 	UPROPERTY()
-	APlayerCameraManager* PlayerCameraManager;
+	APlayerCameraManager* PlayerCameraManager = nullptr;
 
+	UPROPERTY()
+	APlayerController* OwnerPlayerController = nullptr;
+
+	UPROPERTY()
+	UCapsuleComponent* OwnerCapsuleComponent = nullptr;
+	
+	UPROPERTY()
 	FTimerHandle Delay;
-
 	
+	//Переменные
+	UPROPERTY()
+	int32 OwnerPlayerIndex = -1;
 
 
+public:
+
+
+	void CrouchSlideBegin();
 	
+	void DoCrouch();
+	
+	void CrouchSlideCompleted();
 
-public:	
-	// Called every frame
+	void SlideCompleted();
+	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	
 };

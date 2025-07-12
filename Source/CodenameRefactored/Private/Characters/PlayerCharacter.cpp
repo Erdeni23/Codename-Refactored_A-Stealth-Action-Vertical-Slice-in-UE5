@@ -2,41 +2,37 @@
 
 #include "Characters/PlayerCharacter.h"
 
-//components
-
-#include "Camera/PlayerCameraManager.h"
-#include "GameFramework/CharacterMovementComponent.h"
+//Native UE5 components
 #include "Kismet/GameplayStatics.h"
-#include "Components/CapsuleComponent.h"
-#include "TimerManager.h"
 
+//Custom UE5 components
+#include "Components/AdvancedMovementComponent.h"
 
 
 APlayerCharacter::APlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-
+	AdvancedMovementComponent = CreateDefaultSubobject<UAdvancedMovementComponent>(TEXT("AdvMoveComp"));;
 }
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	PlayerCameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
-
-	PlayerCameraManager->ViewPitchMax = defaultCameraViewPitchMax;
-	PlayerCameraManager->ViewPitchMin = defaultCameraViewPitchMin;
-	PlayerCameraManager->ViewYawMax = defaultCameraViewYawMax;
-	PlayerCameraManager->ViewYawMin = defaultCameraViewYawMin;
 	
+	if (IsValid(AdvancedMovementComponent))
+	{
+		UE_LOG(LogTemp, Error, TEXT("AdvancedMovementComponent has a nullptr"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("AdvancedMovementComponent has a nullptr"));
+	}
 }
-
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -45,62 +41,14 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
-//CrouchSlide begin
-
-void APlayerCharacter::DoCrouch()
-{
-	Crouch();
-	GetCapsuleComponent()->SetCapsuleRadius(60.0f);
-		
-	float DelayDuration = UGameplayStatics::GetGlobalTimeDilation(this);
-
-	GetWorld()->GetTimerManager().SetTimer(
-	Delay,							
-	this,								
-	&APlayerCharacter::CrouchSlideCompleted,			
-	DelayDuration,                    
-	false									
-	);
-}
-
 void APlayerCharacter::SlideCrouch()
 {
-	if (!GetCharacterMovement()->IsFalling() &&
-		(!bIsSliding && (GetCharacterMovement()->Velocity.Size2D()>800)))
-	{
-		bIsSliding = true;
-		bUseControllerRotationYaw = false;
-		
-		PlayerCameraManager->ViewYawMax = PlayerCameraManager->GetCameraRotation().Yaw + 90;
-		PlayerCameraManager->ViewYawMin = PlayerCameraManager->GetCameraRotation().Yaw - 30;
-		PlayerCameraManager->ViewPitchMin = -40;
-
-		DoCrouch();
-	}
-	
-	else if (!GetCharacterMovement()->IsFalling() &&
-		(!bIsSliding && (GetCharacterMovement()->Velocity.Size2D()<800)))
-	{
-		DoCrouch();
-	}
-	
-	else
-		return;
-	
+	AdvancedMovementComponent->CrouchSlideBegin();
 }
 
-void APlayerCharacter::CrouchSlideCompleted()
+void APlayerCharacter::UnSlideCrouch()
 {
-	GetWorld()->GetTimerManager().ClearTimer(Delay);
-	bIsSliding = false;
-	bUseControllerRotationYaw = true;
-	
-	PlayerCameraManager->ViewYawMax = defaultCameraViewYawMax;
-	PlayerCameraManager->ViewYawMin = defaultCameraViewYawMin;
-	PlayerCameraManager->ViewPitchMin = defaultCameraViewPitchMin;
-	
+	AdvancedMovementComponent->CrouchSlideCompleted();
 }
-
-//CrouchSlide end
 
 
