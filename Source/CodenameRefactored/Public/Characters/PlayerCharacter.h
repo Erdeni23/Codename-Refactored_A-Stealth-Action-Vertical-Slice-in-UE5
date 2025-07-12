@@ -10,6 +10,7 @@
 
 //UE5 Native
 
+
 //Custom
 class UAdvancedMovementComponent;
 
@@ -29,20 +30,41 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	UAdvancedMovementComponent* AdvancedMovementComponent;
 	
-	
 	//Functions
 	virtual void BeginPlay() override;
+
+	//Variables
+	FVector2D MovementVector;
+	FVector2D MouseLookVector;
 	
-	UFUNCTION(BlueprintCallable)
-	void SlideCrouch();
+	float ForwardVectorInputValue = 0.0f; //Прокси-переменная для передачи MovementVector.Y в спринт
 
-	UFUNCTION(BlueprintCallable)
-	void UnSlideCrouch();
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
+	float MaxSprintSpeed = 900.0f;
 
-public:	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
+	float DefaultSpeed = 600.0f;
+
+public:
+	
 	
 	virtual void Tick(float DeltaTime) override;
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	//Actions bind to Input
+	UFUNCTION()
+	void MouseLook(const FInputActionValue& MouseLookValue);
+	UFUNCTION()
+	void Move(const FInputActionValue& MovementValue);
+	UFUNCTION()
+	void SprintBegin();
+	UFUNCTION()
+	void SprintStop();
+	UFUNCTION()
+	void CrouchSlide();
+	UFUNCTION()
+	void UnCrouchSlide();
+	
 
 };
