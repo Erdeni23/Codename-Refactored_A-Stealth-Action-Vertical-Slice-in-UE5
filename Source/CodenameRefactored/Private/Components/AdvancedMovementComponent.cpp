@@ -102,7 +102,7 @@ void UAdvancedMovementComponent::CrouchSlideBegin()
 		return;
 	}
 	
-	if (OwnerMovementComponent->IsFalling() && bIsSliding)
+	if (OwnerMovementComponent->IsFalling() || bIsSliding)
 	{
 		return;
 	}

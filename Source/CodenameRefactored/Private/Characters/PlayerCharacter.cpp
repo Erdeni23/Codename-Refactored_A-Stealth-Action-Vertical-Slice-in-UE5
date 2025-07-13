@@ -66,7 +66,7 @@ void APlayerCharacter::SprintBegin()
 {
 	if (GetCharacterMovement())
 	{
-		if (ForwardVectorInputValue == 0.9f) // если пытается бежать вдоль оси Forward Vector то
+		if (ForwardVectorInputValue >= 0.9f) // если пытается бежать вдоль оси Forward Vector то
 		{
 			GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
 		}
