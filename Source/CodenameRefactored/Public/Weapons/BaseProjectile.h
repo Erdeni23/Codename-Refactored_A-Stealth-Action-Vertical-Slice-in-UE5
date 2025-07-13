@@ -9,7 +9,7 @@
 class UBoxComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
-
+class AActor;
 
 
 UCLASS(Blueprintable)
@@ -34,17 +34,26 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 
+	FTimerHandle TimeToLiveTimer;
+
 	//Variables
+	UPROPERTY()
 	bool bIsActive;
-	
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float speed = 8000.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float timeToLive = 2.0f;
 
 	//Functions		
 	virtual void BeginPlay() override;
 
-	void InUse();
+	UFUNCTION()
+	void InUse(bool bIsInUse, AActor* Requester = nullptr, AActor* Weapon = nullptr);
 
-	
-
+	UFUNCTION()
+	void ReturnToPool();
 
 public:	
 

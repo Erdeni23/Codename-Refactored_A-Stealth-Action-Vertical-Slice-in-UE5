@@ -7,6 +7,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "TimerManager.h"
 
 
 ABaseProjectile::ABaseProjectile()
@@ -28,12 +29,52 @@ ABaseProjectile::ABaseProjectile()
 	
 }
 
-void ABaseProjectile::InUse()
+void ABaseProjectile::InUse(bool bIsInUse = false, AActor* Requester, AActor* Weapon)
 {
+	TObjectPtr<AActor> SafeRequester = Requester;
+	TObjectPtr<AActor> SafeWeapon = Weapon;
+	
+	if (!SafeRequester || !SafeWeapon)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Error: %s has a nullptr"), *GetOwner()->GetName())
+		return;
+	}
+
 	bIsActive = true;
 
+	//Отключение расчета логики для снаряда если неактивен
+	BoxCollision->IgnoreActorWhenMoving(SafeRequester, bIsActive);
+	BoxCollision->IgnoreActorWhenMoving(SafeWeapon, bIsActive);
+	SetActorEnableCollision(bIsActive);
+	SetActorTickEnabled(bIsActive);
+	SetActorHiddenInGame(!bIsActive);
+
+	if (bIsActive)
+	{
+		ProjectileMovementComponent->Velocity = GetActorForwardVector() * speed;
+		ProjectileMovementComponent->Activate();
+	}
+	else
+	{
+		ProjectileMovementComponent->Velocity = {0,0,0};
+		ProjectileMovementComponent->Deactivate();
+
+		GetWorld()->GetTimerManager().SetTimer(
+		TimeToLiveTimer,							
+		this,								
+		&ABaseProjectile::ReturnToPool,
+		timeToLive,                    
+		false);
+	}
+	
 
 }
+
+void ABaseProjectile::ReturnToPool()
+{
+	InUse();
+}
+
 
 
 
