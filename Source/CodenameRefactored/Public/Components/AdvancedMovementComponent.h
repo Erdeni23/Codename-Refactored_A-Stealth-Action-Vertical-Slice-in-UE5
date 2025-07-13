@@ -34,35 +34,42 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State")
 	bool bIsSliding = false;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|CameraBounds")
 	float DefaultCameraViewPitchMax = 80.0f;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|CameraBounds")
 	float DefaultCameraViewPitchMin = -75.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|CameraBounds")
 	float DefaultCameraViewYawMax = 359.998291f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "CameraBounds")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|CameraBounds")
 	float DefaultCameraViewYawMin = 0.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Movement|CrouchSlide")
+	float MinSpeedForSlide = 800.0f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement|CrouchSlide")
+	float CrouchedCapsuleRadius = 60.0f;
+
 	
 private:
 	
 	//Данные о владельце/компоненты
 	UPROPERTY()
-	ACharacter* OwnerCharacter = nullptr;
+	TObjectPtr<ACharacter> OwnerCharacter = nullptr;
 	
 	UPROPERTY()
-	UCharacterMovementComponent* OwnerMovementComponent = nullptr;
+	TObjectPtr<UCharacterMovementComponent> OwnerMovementComponent = nullptr;
 
 	UPROPERTY()
-	APlayerCameraManager* PlayerCameraManager = nullptr;
+	TObjectPtr<APlayerCameraManager> PlayerCameraManager = nullptr;
 
 	UPROPERTY()
-	APlayerController* OwnerPlayerController = nullptr;
+	TObjectPtr<APlayerController> OwnerPlayerController = nullptr;
 
 	UPROPERTY()
-	UCapsuleComponent* OwnerCapsuleComponent = nullptr;
+	TObjectPtr<UCapsuleComponent> OwnerCapsuleComponent = nullptr;
 	
 	UPROPERTY()
 	FTimerHandle Delay;

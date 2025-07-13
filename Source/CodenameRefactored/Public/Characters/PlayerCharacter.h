@@ -28,7 +28,7 @@ protected:
 	
     //Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	UAdvancedMovementComponent* AdvancedMovementComponent;
+	TObjectPtr<UAdvancedMovementComponent> AdvancedMovementComponent;
 	
 	//Functions
 	virtual void BeginPlay() override;
@@ -52,17 +52,25 @@ public:
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+
+public:
 	//Actions bind to Input
+	
 	UFUNCTION()
 	void MouseLook(const FInputActionValue& MouseLookValue);
+
 	UFUNCTION()
 	void Move(const FInputActionValue& MovementValue);
+	
 	UFUNCTION()
 	void SprintBegin();
+	
 	UFUNCTION()
 	void SprintStop();
+	
 	UFUNCTION()
 	void CrouchSlide();
+	
 	UFUNCTION()
 	void UnCrouchSlide();
 	

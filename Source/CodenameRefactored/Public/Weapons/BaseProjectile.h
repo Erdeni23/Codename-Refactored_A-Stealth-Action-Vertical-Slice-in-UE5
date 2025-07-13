@@ -24,19 +24,26 @@ public:
 	
 protected:
 	
-	virtual void BeginPlay() override;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite)
-	bool bIsActive;
+	//Components
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	TObjectPtr<UBoxComponent> BoxCollision;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
-	UBoxComponent* BoxCollision;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
-	UStaticMeshComponent* ProjectileMesh;
+	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
     
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
-	UProjectileMovementComponent* ProjectileMovementComponent;
+	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
+
+	//Variables
+	bool bIsActive;
+	
+
+	//Functions		
+	virtual void BeginPlay() override;
+
+	void InUse();
+
+	
 
 
 public:	

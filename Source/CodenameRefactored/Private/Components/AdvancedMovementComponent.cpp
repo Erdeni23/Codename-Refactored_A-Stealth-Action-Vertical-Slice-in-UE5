@@ -82,7 +82,7 @@ void UAdvancedMovementComponent::BeginPlay()
 void UAdvancedMovementComponent::DoCrouch()
 {
 	OwnerCharacter->Crouch();
-	OwnerCapsuleComponent->SetCapsuleRadius(60.0f);
+	OwnerCapsuleComponent->SetCapsuleRadius(CrouchedCapsuleRadius);
 		
 	float DelayDuration = UGameplayStatics::GetGlobalTimeDilation(this);
 
@@ -104,7 +104,7 @@ void UAdvancedMovementComponent::CrouchSlideBegin()
 	}
 	
 	if (!OwnerMovementComponent->IsFalling() &&
-		(!bIsSliding && (OwnerMovementComponent->Velocity.Size2D()>800)))
+		(!bIsSliding && (OwnerMovementComponent->Velocity.Size2D()>MinSpeedForSlide)))
 	{
 		bIsSliding = true;
 		OwnerCharacter->bUseControllerRotationYaw = false;
@@ -130,6 +130,12 @@ void UAdvancedMovementComponent::CrouchSlideBegin()
 
 void UAdvancedMovementComponent::SlideCompleted()
 {
+	if (!OwnerMovementComponent || !OwnerCharacter)
+	{
+		UE_LOG(LogTemp, Error, TEXT("SlideCompleted called on an uninitialized component!"));
+		return;
+	}
+	
 	GetWorld()->GetTimerManager().ClearTimer(Delay);
 	bIsSliding = false;
 	OwnerCharacter->bUseControllerRotationYaw = true;

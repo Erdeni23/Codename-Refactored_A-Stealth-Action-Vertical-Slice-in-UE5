@@ -2,10 +2,11 @@
 
 
 #include "Weapons/BaseProjectile.h"
-#include "Components/BoxComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
-#include "Components/StaticMeshComponent.h"
 
+//UE5 Native
+#include "Components/BoxComponent.h"
+#include "Components/StaticMeshComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 
 ABaseProjectile::ABaseProjectile()
@@ -26,6 +27,14 @@ ABaseProjectile::ABaseProjectile()
 
 	
 }
+
+void ABaseProjectile::InUse()
+{
+	bIsActive = true;
+
+
+}
+
 
 
 void ABaseProjectile::BeginPlay()

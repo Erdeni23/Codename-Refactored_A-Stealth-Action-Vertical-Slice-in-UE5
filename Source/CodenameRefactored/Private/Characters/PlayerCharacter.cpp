@@ -23,10 +23,6 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	if (!IsValid(AdvancedMovementComponent))
-	{
-		UE_LOG(LogTemp, Error, TEXT("AdvancedMovementComponent has a nullptr"));
-	}
 
 }
 
@@ -68,31 +64,36 @@ void APlayerCharacter::MouseLook(const FInputActionValue& MouseLookValue)
 
 void APlayerCharacter::SprintBegin()
 {
-	if (ForwardVectorInputValue == 1.0f)
+	if (GetCharacterMovement())
 	{
-		GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+		if (ForwardVectorInputValue == 0.9f) // если пытается бежать вдоль оси Forward Vector то
+		{
+			GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
+		}
 	}
-	
 }
 
 
 void APlayerCharacter::SprintStop()
 {
-	GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
+	if (GetCharacterMovement())
+		GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
 	
 }
 
 
 void APlayerCharacter::CrouchSlide()
 {
-	AdvancedMovementComponent->CrouchSlideBegin();
+	if (AdvancedMovementComponent)
+		AdvancedMovementComponent->CrouchSlideBegin();
 	
 }
 
 
 void APlayerCharacter::UnCrouchSlide()
 {
-	AdvancedMovementComponent->CrouchSlideCompleted();
+	if (AdvancedMovementComponent)
+		AdvancedMovementComponent->CrouchSlideCompleted();
 	
 }
 

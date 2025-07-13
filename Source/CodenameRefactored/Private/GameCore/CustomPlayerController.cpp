@@ -18,11 +18,10 @@ void ACustomPlayerController::BeginPlay()
 
 	Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	
-	if (IsValid(Subsystem))
+	if (Subsystem)
 	{
 		Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		Subsystem->AddMappingContext(MouseLookMappingContext, 1);
-
 	}
 	else
 	{
@@ -38,9 +37,7 @@ void ACustomPlayerController::SetupInputComponent()
 	EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent);
 
 	if (!EnhancedInputComponent)
-	{
 		UE_LOG(LogTemp, Error, TEXT("EnhancedInputComponent was not loaded, check Plugins in Editor Preference"));
-	}
 	
 }
 
@@ -51,16 +48,20 @@ void ACustomPlayerController::OnPossess(APawn* CurrentPawn)
 	PlayerCharacter = Cast<APlayerCharacter>(GetPawn());
 
 	if (!PlayerCharacter)
+	{
 		UE_LOG(LogTemp, Error, TEXT("Unable to get Player Character"));
-		
+		return;
+	}
+	
 	//BindAction (Что действует, Когда действует(на событие триггер или выполнено), Кто действует, Как действует)
-	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, PlayerCharacter, &APlayerCharacter::Move);
-	EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, PlayerCharacter, &APlayerCharacter::MouseLook);
-	EnhancedInputComponent->BindAction(CrouchSlideAction, ETriggerEvent::Ongoing, PlayerCharacter, &APlayerCharacter::CrouchSlide);
-	EnhancedInputComponent->BindAction(CrouchSlideAction, ETriggerEvent::Completed, PlayerCharacter, &APlayerCharacter::UnCrouchSlide);
-	EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Ongoing, PlayerCharacter, &APlayerCharacter::SprintBegin);
-	EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Completed, PlayerCharacter, &APlayerCharacter::SprintStop);
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, PlayerCharacter, &ACharacter::Jump);
-	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Canceled, PlayerCharacter, &ACharacter::StopJumping);
+	EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, PlayerCharacter.Get(), &APlayerCharacter::Move);
+	EnhancedInputComponent->BindAction(MouseLookAction, ETriggerEvent::Triggered, PlayerCharacter.Get(), &APlayerCharacter::MouseLook);
+	EnhancedInputComponent->BindAction(CrouchSlideAction, ETriggerEvent::Ongoing, PlayerCharacter.Get(), &APlayerCharacter::CrouchSlide);
+	EnhancedInputComponent->BindAction(CrouchSlideAction, ETriggerEvent::Completed, PlayerCharacter.Get(), &APlayerCharacter::UnCrouchSlide);
+	EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Ongoing, PlayerCharacter.Get(), &APlayerCharacter::SprintBegin);
+	EnhancedInputComponent->BindAction(RunAction, ETriggerEvent::Completed, PlayerCharacter.Get(), &APlayerCharacter::SprintStop);
+	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, PlayerCharacter.Get(), &ACharacter::Jump);
+	EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Canceled, PlayerCharacter.Get(), &ACharacter::StopJumping);
+
 }
 

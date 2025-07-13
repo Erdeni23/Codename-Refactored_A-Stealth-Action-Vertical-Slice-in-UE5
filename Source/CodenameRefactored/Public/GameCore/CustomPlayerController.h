@@ -26,38 +26,38 @@ protected:
 
 	//OwnerReferences
 	UPROPERTY()
-	APlayerCharacter* PlayerCharacter;
+	TObjectPtr<APlayerCharacter> PlayerCharacter;
 	
 	//Input
 	UPROPERTY(EditDefaultsOnly, Category = "Character Input")
-	UInputMappingContext* DefaultMappingContext;
+	TObjectPtr<UInputMappingContext> DefaultMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Input")
-	UInputMappingContext* MouseLookMappingContext;
+	TObjectPtr<UInputMappingContext> MouseLookMappingContext;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Input")
-	UInputAction* MouseLookAction;
+	TObjectPtr<UInputAction> MouseLookAction;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Character Input")
-	UInputAction* MoveAction;
+	TObjectPtr<UInputAction> MoveAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Input")
-	UInputAction* JumpAction;
+	TObjectPtr<UInputAction> JumpAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Input")
-	UInputAction* CrouchSlideAction;
+	TObjectPtr<UInputAction> CrouchSlideAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Input")
-	UInputAction* RunAction;
+	TObjectPtr<UInputAction> RunAction;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Character Input")
-	UInputAction* ShootAction;
+	TObjectPtr<UInputAction> ShootAction;
 
 	UPROPERTY()
-	UEnhancedInputLocalPlayerSubsystem* Subsystem;
+	TObjectPtr<UEnhancedInputLocalPlayerSubsystem> Subsystem;
 
 	UPROPERTY()
-	UEnhancedInputComponent* EnhancedInputComponent;
+	TObjectPtr<UEnhancedInputComponent> EnhancedInputComponent;
 
 	//Functions
 
