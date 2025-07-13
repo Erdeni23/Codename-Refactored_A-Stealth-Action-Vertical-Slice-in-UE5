@@ -13,7 +13,6 @@ class UCapsuleComponent;
 class UPlayerCameraManager;
 
 
-
 UCLASS( ClassGroup=(Movement), meta=(BlueprintSpawnableComponent) )
 class CODENAMEREFACTORED_API UAdvancedMovementComponent : public UActorComponent
 {
@@ -24,10 +23,9 @@ public:
 	UAdvancedMovementComponent();
 
 protected:
+	
 	//Функции
 	virtual void BeginPlay() override;
-
-
 	
 	//Переменные, доступные через блюпринты для Чтения/ЧтенияЗаписи
 

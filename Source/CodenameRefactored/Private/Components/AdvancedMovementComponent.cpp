@@ -74,8 +74,6 @@ void UAdvancedMovementComponent::BeginPlay()
 	PlayerCameraManager->ViewPitchMin = DefaultCameraViewPitchMin;
 	PlayerCameraManager->ViewYawMax = DefaultCameraViewYawMax;
 	PlayerCameraManager->ViewYawMin = DefaultCameraViewYawMin;
-
-
 	
 }
 
@@ -93,6 +91,7 @@ void UAdvancedMovementComponent::DoCrouch()
 	DelayDuration,                    
 	false									
 	);
+	
 }
 
 void UAdvancedMovementComponent::CrouchSlideBegin()
@@ -103,8 +102,12 @@ void UAdvancedMovementComponent::CrouchSlideBegin()
 		return;
 	}
 	
-	if (!OwnerMovementComponent->IsFalling() &&
-		(!bIsSliding && (OwnerMovementComponent->Velocity.Size2D()>MinSpeedForSlide)))
+	if (OwnerMovementComponent->IsFalling() && bIsSliding)
+	{
+		return;
+	}
+	
+	if(OwnerMovementComponent->Velocity.Size2D()>MinSpeedForSlide)
 	{
 		bIsSliding = true;
 		OwnerCharacter->bUseControllerRotationYaw = false;
@@ -112,20 +115,10 @@ void UAdvancedMovementComponent::CrouchSlideBegin()
 		PlayerCameraManager->ViewYawMax = PlayerCameraManager->GetCameraRotation().Yaw + 90;
 		PlayerCameraManager->ViewYawMin = PlayerCameraManager->GetCameraRotation().Yaw - 30;
 		PlayerCameraManager->ViewPitchMin = -40;
-
-		DoCrouch();
-
 	}
 	
-	else if (!OwnerMovementComponent->IsFalling() &&
-		(!bIsSliding && (OwnerMovementComponent->Velocity.Size2D()<800)))
-	{
-		DoCrouch();
-
-	}
+	DoCrouch();
 	
-	else
-		return;
 }
 
 void UAdvancedMovementComponent::SlideCompleted()
@@ -143,6 +136,7 @@ void UAdvancedMovementComponent::SlideCompleted()
 	PlayerCameraManager->ViewYawMax = DefaultCameraViewYawMax;
 	PlayerCameraManager->ViewYawMin = DefaultCameraViewYawMin;
 	PlayerCameraManager->ViewPitchMin = DefaultCameraViewPitchMin;
+	
 }
 
 void UAdvancedMovementComponent::CrouchSlideCompleted()
