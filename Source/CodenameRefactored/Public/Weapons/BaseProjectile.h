@@ -21,6 +21,13 @@ public:
 
 	ABaseProjectile();
 
+	//Variables
+	UPROPERTY()
+	bool bIsActive;
+
+	//Functions
+	UFUNCTION()
+	virtual void ActivateProjectile(AActor* Requester = nullptr, AActor* Weapon = nullptr);
 	
 protected:
 	
@@ -37,8 +44,7 @@ protected:
 	FTimerHandle TimeToLiveTimer;
 
 	//Variables
-	UPROPERTY()
-	bool bIsActive;
+
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float speed = 8000.0f;
@@ -52,8 +58,7 @@ protected:
 	//Functions		
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	virtual void ActivateProjectile(AActor* Requester = nullptr, AActor* Weapon = nullptr);
+
 
 	UFUNCTION()
 	virtual void DeactivateProjectile(AActor* Weapon = nullptr);
@@ -63,7 +68,5 @@ protected:
 public:	
 
 	virtual void Tick(float DeltaTime) override;
-
 	
-
 };
