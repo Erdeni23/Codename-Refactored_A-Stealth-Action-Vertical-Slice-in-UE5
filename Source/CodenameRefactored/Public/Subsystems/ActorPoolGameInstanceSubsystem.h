@@ -1,17 +1,64 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
+// Copyright (C) 2025 Erdeni Arsalanov. All Rights Reserved.
 #pragma once
 
 #include "CoreMinimal.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+
+
 #include "ActorPoolGameInstanceSubsystem.generated.h"
 
+class ABaseProjectile;
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class CODENAMEREFACTORED_API UActorPoolGameInstanceSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
+public:
+
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+
+	virtual void Deinitialize() override;
+
+	/*
+	создаем проверку наличия сабсистемы на блюпринтах, для того чтобы иметь
+	только одну инстанцию в игре
+	*/
+	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	
+	/*
+	Получаем данные World через указатель и встроенную фунцкию GetWorld,
+	для того, чтобы сабсистема имела, контекст WorldContext
+	*/
+	virtual UWorld* GetWorld() const override;
+
+protected:
+	
+	UFUNCTION(BlueprintImplementableEvent)
+	void Init();
+
+	/*
+	Актор пул система, создается при инициалзации в BP_ActorPoolManager.
+	Логика передачи/возврата актора исполнена здесь 
+	*/
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject")) 
+	static AActor* SpawnProjectileFromPool
+		(
+		UObject* WorldContextObject,
+		AActor* Requester,
+		AActor* Weapon,
+		FTransform Transform,
+		const TArray<ABaseProjectile*>& ActorPool
+		);
+
+	
+protected:
+
+
+
+private:
+
+
+
 };
