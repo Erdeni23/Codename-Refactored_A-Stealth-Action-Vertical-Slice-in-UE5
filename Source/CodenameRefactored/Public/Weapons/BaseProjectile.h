@@ -50,10 +50,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void InUse(bool bIsInUse, AActor* Requester = nullptr, AActor* Weapon = nullptr);
+	virtual void ActivateProjectile(AActor* Requester = nullptr, AActor* Weapon = nullptr);
 
 	UFUNCTION()
-	void ReturnToPool();
+	virtual void DeactivateProjectile();
 
 public:	
 

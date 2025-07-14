@@ -19,6 +19,7 @@ ABaseProjectile::ABaseProjectile()
 	 * чтобы ProjectileMovementComponent корректно работал при вводе/выводе из пула */
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	RootComponent = BoxCollision;
+	BoxCollision->SetCollisionProfileName(TEXT("Projectile"));
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
@@ -29,60 +30,67 @@ ABaseProjectile::ABaseProjectile()
 	
 }
 
-void ABaseProjectile::InUse(bool bIsInUse = false, AActor* Requester, AActor* Weapon)
+void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 {
-	TObjectPtr<AActor> SafeRequester = Requester;
-	TObjectPtr<AActor> SafeWeapon = Weapon;
 	
-	if (!SafeRequester || !SafeWeapon)
+	if (!Requester || !Weapon)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Error: %s has a nullptr"), *GetOwner()->GetName())
+		UE_LOG(LogTemp, Error, TEXT("Error: %s has a nullptr as a Requester or a Weapon"), *GetName());
 		return;
 	}
 
 	bIsActive = true;
 
-	//Отключение расчета логики для снаряда если неактивен
-	BoxCollision->IgnoreActorWhenMoving(SafeRequester, bIsActive);
-	BoxCollision->IgnoreActorWhenMoving(SafeWeapon, bIsActive);
+	//Включение расчета логики для снаряда если активен
+	BoxCollision->IgnoreActorWhenMoving(Requester, bIsActive);
+	BoxCollision->IgnoreActorWhenMoving(Weapon, bIsActive);
+	
 	SetActorEnableCollision(bIsActive);
 	SetActorTickEnabled(bIsActive);
 	SetActorHiddenInGame(!bIsActive);
-
-	if (bIsActive)
-	{
-		ProjectileMovementComponent->Velocity = GetActorForwardVector() * speed;
-		ProjectileMovementComponent->Activate();
-	}
-	else
-	{
-		ProjectileMovementComponent->Velocity = {0,0,0};
-		ProjectileMovementComponent->Deactivate();
-
-		GetWorld()->GetTimerManager().SetTimer(
-		TimeToLiveTimer,							
-		this,								
-		&ABaseProjectile::ReturnToPool,
-		timeToLive,                    
-		false);
-	}
 	
+	ProjectileMovementComponent->Velocity = GetActorForwardVector() * speed;
+	ProjectileMovementComponent->Activate();
 
+	//очищаем таймер, который мог остаться с прошлого цикла пула
+	GetWorld()->GetTimerManager().ClearTimer(TimeToLiveTimer);
+	GetWorld()->GetTimerManager().SetTimer
+	(
+	TimeToLiveTimer,							
+	[this]()
+	{
+		DeactivateProjectile();
+	},
+	timeToLive,                    
+	false
+	);
+	
 }
 
-void ABaseProjectile::ReturnToPool()
+void ABaseProjectile::DeactivateProjectile()
 {
-	InUse();
+	bIsActive = false;
+
+	//Отключение расчета логики для снаряда если неактивен
+	BoxCollision->ClearMoveIgnoreActors();
+	
+	SetActorEnableCollision(bIsActive);
+	SetActorTickEnabled(bIsActive);
+	SetActorHiddenInGame(!bIsActive);
+	
+	ProjectileMovementComponent->Velocity = {0,0,0};
+	ProjectileMovementComponent->Deactivate();
+
 }
-
-
 
 
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+	DeactivateProjectile();
 	
 }
+
 
 // Called every frame
 void ABaseProjectile::Tick(float DeltaTime)
