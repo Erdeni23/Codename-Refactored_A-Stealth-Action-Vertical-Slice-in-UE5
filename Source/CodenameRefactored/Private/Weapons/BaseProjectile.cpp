@@ -9,6 +9,9 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "TimerManager.h"
 
+//Custom
+#include "Interfaces/ActorPoolInterface.h"
+
 
 ABaseProjectile::ABaseProjectile()
 {
@@ -27,6 +30,9 @@ ABaseProjectile::ABaseProjectile()
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovementComponent->UpdatedComponent = RootComponent;
 
+	ProjectileMovementComponent->ProjectileGravityScale = gravityScale;
+	ProjectileMovementComponent->bShouldBounce = false;
+	
 	
 }
 
@@ -57,9 +63,9 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 	GetWorld()->GetTimerManager().SetTimer
 	(
 	TimeToLiveTimer,							
-	[this]()
+	[this, Weapon]()
 	{
-		DeactivateProjectile();
+		DeactivateProjectile(Weapon);
 	},
 	timeToLive,                    
 	false
@@ -67,28 +73,32 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 	
 }
 
-void ABaseProjectile::DeactivateProjectile()
+
+void ABaseProjectile::DeactivateProjectile(AActor* Weapon)
 {
 	bIsActive = false;
 
-	//Отключение расчета логики для снаряда если неактивен
 	BoxCollision->ClearMoveIgnoreActors();
 	
+	//Отключение расчета логики для снаряда если неактивен
 	SetActorEnableCollision(bIsActive);
 	SetActorTickEnabled(bIsActive);
 	SetActorHiddenInGame(!bIsActive);
 	
-	ProjectileMovementComponent->Velocity = {0,0,0};
+	ProjectileMovementComponent->Velocity = FVector::ZeroVector;
 	ProjectileMovementComponent->Deactivate();
 
+	//отправляем референс оружию, для настройки коллизии
+	if (Weapon)
+		IActorPoolInterface::Execute_ProjectileWasReturnedToPool(Weapon,this);
 }
+
 
 
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	DeactivateProjectile();
-	
 }
 
 

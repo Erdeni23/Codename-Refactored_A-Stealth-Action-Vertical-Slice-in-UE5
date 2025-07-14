@@ -25,13 +25,13 @@ public:
 protected:
 	
 	//Components
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UBoxComponent> BoxCollision;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UStaticMeshComponent> ProjectileMesh;
     
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 
 	FTimerHandle TimeToLiveTimer;
@@ -46,6 +46,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float timeToLive = 2.0f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	float gravityScale = 0.0f;
+
 	//Functions		
 	virtual void BeginPlay() override;
 
@@ -53,7 +56,9 @@ protected:
 	virtual void ActivateProjectile(AActor* Requester = nullptr, AActor* Weapon = nullptr);
 
 	UFUNCTION()
-	virtual void DeactivateProjectile();
+	virtual void DeactivateProjectile(AActor* Weapon = nullptr);
+
+	
 
 public:	
 
