@@ -8,9 +8,8 @@
 #include "ActorPoolGameInstanceSubsystem.generated.h"
 
 class ABaseProjectile;
-/**
- * 
- */
+
+
 UCLASS(Blueprintable)
 class CODENAMEREFACTORED_API UActorPoolGameInstanceSubsystem : public UGameInstanceSubsystem
 {
@@ -34,22 +33,36 @@ public:
 	virtual UWorld* GetWorld() const override;
 
 protected:
-	
-	UFUNCTION(BlueprintImplementableEvent)
+	FTimerHandle PoolInitTimerHandle; 
+	UFUNCTION()
 	void Init();
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void debugevent();
+
+
+	UPROPERTY()
+	TArray<ABaseProjectile*> ProjectilePool;
+	
+
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pool Settings")
+	TSubclassOf<ABaseProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Pool Settings")
+	int32 PoolSize = 200;
+	
 	/*
 	Актор пул система, создается при инициалзации в BP_ActorPoolManager.
 	Логика передачи/возврата актора исполнена здесь 
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject")) 
-	static AActor* SpawnProjectileFromPool
+	 ABaseProjectile* SpawnProjectileFromPool
 		(
 		UObject* WorldContextObject,
 		AActor* Requester,
 		AActor* Weapon,
-		FTransform Transform,
-		const TArray<ABaseProjectile*>& ActorPool
+		FTransform Transform
 		);
 
 	
@@ -59,6 +72,7 @@ protected:
 
 private:
 
+	
 
 
 };

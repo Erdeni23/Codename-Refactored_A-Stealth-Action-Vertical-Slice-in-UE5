@@ -3,7 +3,8 @@
 #include "Subsystems/ActorPoolGameInstanceSubsystem.h"
 
 #include "Weapons/BaseProjectile.h"
-#include "Interfaces/ActorPoolInterface.h"
+
+
 
 
 
@@ -21,17 +22,37 @@ void UActorPoolGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Colle
 {
 	Super::Initialize(Collection);
 	UE_LOG(LogTemp, Warning, TEXT("ObjectPoolSubsystem has been initialized"));
+	
 	Init();
+	debugevent();
 }
+
+
+void UActorPoolGameInstanceSubsystem::Init()
+{
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = nullptr; 
+	SpawnParams.Instigator = nullptr; 
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	for (int i = 0; i < PoolSize; i++)
+	{
+		ABaseProjectile* NewActor = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, FTransform(FVector::ZeroVector), SpawnParams);
+
+		ProjectilePool.Add(NewActor);
+		
+	}
+}
+
 
 
 UWorld* UActorPoolGameInstanceSubsystem::GetWorld() const
 {
 	UGameInstance* MyGameInstance = GetGameInstance();
 	if (MyGameInstance)
-	{
 		return MyGameInstance->GetWorld();
-	}
+	UE_LOG(LogTemp, Error, TEXT("Game Instance has a nullptr, please check Project Settings"));
+	
 	return nullptr;
 }
 
@@ -43,29 +64,26 @@ void UActorPoolGameInstanceSubsystem::Deinitialize()
 }
 
 
-AActor* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
+ABaseProjectile* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
 	(
 	UObject* WorldContextObject,
 	AActor* Requester,
 	AActor* Weapon,
-	FTransform Transform,
-	const TArray<ABaseProjectile*>& ActorPool
+	FTransform Transform
 	)
 {
-	for(ABaseProjectile* Projectile : ActorPool)
+	for(ABaseProjectile* Projectile : ProjectilePool)
 	{
 		if (Projectile && !Projectile->bIsActive)
 		{
 			Projectile->SetActorTransform(Transform);
 			Projectile->ActivateProjectile(Requester, Weapon);
-			IActorPoolInterface::Execute_PooledProjectileReference(Weapon,Projectile);
 			
-			/*интерфейс для передачи оружию информации о снаряде выпущенным Requester'ом
-			нужно для правильной работы коллизии 
-			*/
-			
+
 			return Projectile;
 		}
 	}
+	
+	UE_LOG(LogTemp, Warning, TEXT("No available Projectile to Pool, please modify ActorPoolSize parameter in Class Defaults"));
 	return nullptr;
 }

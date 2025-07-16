@@ -23,6 +23,9 @@ ABaseProjectile::ABaseProjectile()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	RootComponent = BoxCollision;
 	BoxCollision->SetCollisionProfileName(TEXT("Projectile"));
+	RootComponent->SetMobility(EComponentMobility::Movable); 
+
+
 
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
@@ -44,7 +47,7 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 		UE_LOG(LogTemp, Error, TEXT("Error: %s has a nullptr as a Requester or a Weapon"), *GetName());
 		return;
 	}
-
+	
 	bIsActive = true;
 
 	//Включение расчета логики для снаряда если активен
@@ -76,6 +79,7 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 
 void ABaseProjectile::DeactivateProjectile(AActor* Weapon)
 {
+	
 	bIsActive = false;
 
 	BoxCollision->ClearMoveIgnoreActors();
