@@ -24,14 +24,13 @@ void UActorPoolGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Colle
 	
 	GetWorld()->GetTimerManager().SetTimer
 			(
-			PopulatePoolTimerHandle, 
+			TimerHandle, 
 			this,
 			&UActorPoolGameInstanceSubsystem::Init,       
 			2.0f,               
 			false
 			);
 	
-	debugevent();
 }
 
 

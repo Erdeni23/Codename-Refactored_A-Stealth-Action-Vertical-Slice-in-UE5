@@ -36,9 +36,6 @@ protected:
 	
 	UFUNCTION()
 	void Init();
-
-	UFUNCTION(BlueprintImplementableEvent)
-	void debugevent();
 	
 	UPROPERTY()
 	TArray<ABaseProjectile*> ProjectilePool;
@@ -49,7 +46,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Pool Settings")
 	int32 PoolSize = 200;
 
-	FTimerHandle PopulatePoolTimerHandle;
+	FTimerHandle TimerHandle;
 
 	
 	/*

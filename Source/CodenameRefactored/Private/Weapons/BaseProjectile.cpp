@@ -23,10 +23,9 @@ ABaseProjectile::ABaseProjectile()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxCollision"));
 	RootComponent = BoxCollision;
 	BoxCollision->SetCollisionProfileName(TEXT("Projectile"));
-	RootComponent->SetMobility(EComponentMobility::Movable); 
 
-
-
+	RootComponent->SetMobility(EComponentMobility::Movable);
+	
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	ProjectileMesh->SetupAttachment(RootComponent);
 
@@ -35,7 +34,6 @@ ABaseProjectile::ABaseProjectile()
 
 	ProjectileMovementComponent->ProjectileGravityScale = gravityScale;
 	ProjectileMovementComponent->bShouldBounce = false;
-	
 	
 }
 
@@ -50,19 +48,20 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 	
 	bIsActive = true;
 
-	//Включение расчета логики для снаряда если активен
 	BoxCollision->IgnoreActorWhenMoving(Requester, bIsActive);
 	BoxCollision->IgnoreActorWhenMoving(Weapon, bIsActive);
+
+	//Включение расчета логики для снаряда если активен
+	ProjectileMovementComponent->Velocity = GetActorForwardVector() * speed;
+	ProjectileMovementComponent->Activate();
 	
 	SetActorEnableCollision(bIsActive);
 	SetActorTickEnabled(bIsActive);
 	SetActorHiddenInGame(!bIsActive);
 	
-	ProjectileMovementComponent->Velocity = GetActorForwardVector() * speed;
-	ProjectileMovementComponent->Activate();
-
 	//очищаем таймер, который мог остаться с прошлого цикла пула
 	GetWorld()->GetTimerManager().ClearTimer(TimeToLiveTimer);
+	
 	GetWorld()->GetTimerManager().SetTimer
 	(
 	TimeToLiveTimer,							
@@ -80,10 +79,9 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 void ABaseProjectile::DeactivateProjectile(AActor* Weapon)
 {
 	
+	BoxCollision->ClearMoveIgnoreActors();
 	bIsActive = false;
 
-	BoxCollision->ClearMoveIgnoreActors();
-	
 	//Отключение расчета логики для снаряда если неактивен
 	SetActorEnableCollision(bIsActive);
 	SetActorTickEnabled(bIsActive);
@@ -95,6 +93,7 @@ void ABaseProjectile::DeactivateProjectile(AActor* Weapon)
 	//отправляем референс оружию, для настройки коллизии
 	if (Weapon)
 		IActorPoolInterface::Execute_ProjectileWasReturnedToPool(Weapon,this);
+	
 }
 
 
@@ -103,6 +102,7 @@ void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	DeactivateProjectile();
+	
 }
 
 

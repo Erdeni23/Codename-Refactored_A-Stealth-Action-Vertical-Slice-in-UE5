@@ -14,7 +14,6 @@
 //Custom
 class UAdvancedMovementComponent;
 
-
 UCLASS()
 class CODENAMEREFACTORED_API APlayerCharacter : public ACharacter
 {
@@ -46,7 +45,6 @@ protected:
 	float DefaultSpeed = 600.0f;
 
 public:
-	
 	
 	virtual void Tick(float DeltaTime) override;
 	

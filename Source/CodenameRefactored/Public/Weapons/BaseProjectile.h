@@ -45,7 +45,6 @@ protected:
 
 	//Variables
 
-
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float speed = 8000.0f;
 
@@ -57,13 +56,10 @@ protected:
 
 	//Functions		
 	virtual void BeginPlay() override;
-
-
-
+	
 	UFUNCTION()
 	virtual void DeactivateProjectile(AActor* Weapon = nullptr);
 
-	
 
 public:	
 
