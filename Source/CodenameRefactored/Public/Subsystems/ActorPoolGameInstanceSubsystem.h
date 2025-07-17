@@ -27,30 +27,30 @@ public:
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override;
 	
 	/*
-	Получаем данные World через указатель и встроенную фунцкию GetWorld,
+	Переопределяем встроенную фунцкию GetWorld,
 	для того, чтобы сабсистема имела, контекст WorldContext
 	*/
 	virtual UWorld* GetWorld() const override;
 
 protected:
-	FTimerHandle PoolInitTimerHandle; 
+	
 	UFUNCTION()
 	void Init();
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void debugevent();
-
-
+	
 	UPROPERTY()
 	TArray<ABaseProjectile*> ProjectilePool;
-	
-
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pool Settings")
 	TSubclassOf<ABaseProjectile> ProjectileClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pool Settings")
 	int32 PoolSize = 200;
+
+	FTimerHandle PopulatePoolTimerHandle;
+
 	
 	/*
 	Актор пул система, создается при инициалзации в BP_ActorPoolManager.

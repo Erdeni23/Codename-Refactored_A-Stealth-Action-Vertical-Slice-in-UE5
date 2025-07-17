@@ -3,9 +3,7 @@
 #include "Subsystems/ActorPoolGameInstanceSubsystem.h"
 
 #include "Weapons/BaseProjectile.h"
-
-
-
+#include "TimerManager.h"
 
 
 bool UActorPoolGameInstanceSubsystem::ShouldCreateSubsystem(UObject* Outer) const 
@@ -23,17 +21,27 @@ void UActorPoolGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Colle
 	Super::Initialize(Collection);
 	UE_LOG(LogTemp, Warning, TEXT("ObjectPoolSubsystem has been initialized"));
 	
-	Init();
+	
+	GetWorld()->GetTimerManager().SetTimer
+			(
+			PopulatePoolTimerHandle, 
+			this,
+			&UActorPoolGameInstanceSubsystem::Init,       
+			2.0f,               
+			false
+			);
+	
 	debugevent();
 }
 
 
 void UActorPoolGameInstanceSubsystem::Init()
 {
+	
 	FActorSpawnParameters SpawnParams;
 	SpawnParams.Owner = nullptr; 
 	SpawnParams.Instigator = nullptr; 
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	for (int i = 0; i < PoolSize; i++)
 	{
@@ -75,11 +83,10 @@ ABaseProjectile* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
 	for(ABaseProjectile* Projectile : ProjectilePool)
 	{
 		if (Projectile && !Projectile->bIsActive)
-		{
+		{	
 			Projectile->SetActorTransform(Transform);
 			Projectile->ActivateProjectile(Requester, Weapon);
 			
-
 			return Projectile;
 		}
 	}
