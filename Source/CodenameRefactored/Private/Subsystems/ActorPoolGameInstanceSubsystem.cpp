@@ -71,9 +71,9 @@ void UActorPoolGameInstanceSubsystem::Deinitialize()
 }
 
 
-ABaseProjectile* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
+AActor* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
 	(
-	UObject* WorldContextObject,
+
 	AActor* Requester,
 	AActor* Weapon,
 	FTransform Transform

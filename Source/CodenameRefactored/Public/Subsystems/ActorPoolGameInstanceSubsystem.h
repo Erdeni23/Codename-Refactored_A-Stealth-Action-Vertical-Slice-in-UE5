@@ -32,6 +32,20 @@ public:
 	*/
 	virtual UWorld* GetWorld() const override;
 
+	/*
+	Актор пул система, создается при инициалзации в BP_ActorPoolManager.
+	Логика передачи/возврата актора исполнена здесь 
+	*/
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject")) 
+	AActor* SpawnProjectileFromPool
+	   (
+
+	   AActor* Requester,
+	   AActor* Weapon,
+	   FTransform Transform
+	   );
+
+
 protected:
 	
 	UFUNCTION()
@@ -47,21 +61,6 @@ protected:
 	int32 PoolSize = 200;
 
 	FTimerHandle TimerHandle;
-
-	
-	/*
-	Актор пул система, создается при инициалзации в BP_ActorPoolManager.
-	Логика передачи/возврата актора исполнена здесь 
-	*/
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject")) 
-	 ABaseProjectile* SpawnProjectileFromPool
-		(
-		UObject* WorldContextObject,
-		AActor* Requester,
-		AActor* Weapon,
-		FTransform Transform
-		);
-
 	
 protected:
 

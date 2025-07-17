@@ -37,6 +37,7 @@ ABaseProjectile::ABaseProjectile()
 	
 }
 
+
 void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 {
 	
@@ -97,12 +98,20 @@ void ABaseProjectile::DeactivateProjectile(AActor* Weapon)
 }
 
 
-
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 	DeactivateProjectile();
+
+	BoxCollision->OnComponentHit.AddDynamic(this,&ABaseProjectile::OnHit);
 	
+}
+
+
+void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) 
+{
+	DeactivateProjectile();
+
 }
 
 
