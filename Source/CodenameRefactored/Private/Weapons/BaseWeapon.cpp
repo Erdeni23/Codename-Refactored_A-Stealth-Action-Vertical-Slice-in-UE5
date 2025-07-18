@@ -21,7 +21,7 @@ void ABaseWeapon::BeginPlay()
 	
 }
 
-
+//при спавне обязательно!
 void ABaseWeapon::InitiateWeapon(USkeletalMeshComponent* OwnerSkeletalMeshComponent, UCapsuleComponent* OwnerCapsuleComponent)
 {
 	OwnerSkeletalMesh = OwnerSkeletalMeshComponent;

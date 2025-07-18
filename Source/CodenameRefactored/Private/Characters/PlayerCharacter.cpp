@@ -22,8 +22,8 @@ void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
-
 }
+
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
@@ -37,8 +37,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
-//Enhanced Input 
 
+//Enhanced Input 
 void APlayerCharacter::Move(const FInputActionValue& MovementValue)
 {
 	MovementVector = MovementValue.Get<FVector2D>();
@@ -85,8 +85,6 @@ void APlayerCharacter::CrouchSlide()
 		AdvancedMovementComponent->CrouchSlideBegin();
 	
 }
-
-
 
 void APlayerCharacter::UnCrouchSlide()
 {
