@@ -16,7 +16,7 @@
 ABaseProjectile::ABaseProjectile()
 {
  	
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	/* Устанавливаем коллизию как Root Component для того,
 	 * чтобы ProjectileMovementComponent корректно работал при вводе/выводе из пула */
@@ -32,7 +32,7 @@ ABaseProjectile::ABaseProjectile()
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement"));
 	ProjectileMovementComponent->UpdatedComponent = RootComponent;
 
-	ProjectileMovementComponent->ProjectileGravityScale = gravityScale;
+	ProjectileMovementComponent->ProjectileGravityScale = GravityScale;
 	ProjectileMovementComponent->bShouldBounce = false;
 	
 }
@@ -59,11 +59,10 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 	BoxCollision->IgnoreActorWhenMoving(CurrentWeapon, bIsActive);
 
 	//Включение расчета логики для снаряда если активен
-	ProjectileMovementComponent->Velocity = GetActorForwardVector() * speed;
+	ProjectileMovementComponent->Velocity = GetActorForwardVector() * Speed;
 	ProjectileMovementComponent->Activate();
 	
 	SetActorEnableCollision(bIsActive);
-	SetActorTickEnabled(bIsActive);
 	SetActorHiddenInGame(!bIsActive);
 	
 	//очищаем таймер, который мог остаться с прошлого цикла пула
@@ -76,7 +75,7 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 	{
 		DeactivateProjectile();
 	},
-	timeToLive,                    
+	TimeToLive,                    
 	false
 	);
 	
@@ -91,7 +90,6 @@ void ABaseProjectile::DeactivateProjectile()
 
 	//Отключение расчета логики для снаряда если неактивен
 	SetActorEnableCollision(bIsActive);
-	SetActorTickEnabled(bIsActive);
 	SetActorHiddenInGame(!bIsActive);
 	
 	ProjectileMovementComponent->Velocity = FVector::ZeroVector;
@@ -134,10 +132,4 @@ void ABaseProjectile::OnHit
 }
 
 
-// Called every frame
-void ABaseProjectile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
 

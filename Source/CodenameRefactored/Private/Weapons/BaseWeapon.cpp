@@ -34,7 +34,7 @@ void ABaseWeapon::InitiateWeapon(USkeletalMeshComponent* OwnerSkeletalMeshCompon
 }
 
 
-void ABaseWeapon::ShootWeapon(FTransform Transform)
+void ABaseWeapon::ShootWeapon(const FTransform& Transform)
 {
 	AActor* Projectile = ActorPoolSubsystem->SpawnProjectileFromPool(GunOwner, this, Transform);
 

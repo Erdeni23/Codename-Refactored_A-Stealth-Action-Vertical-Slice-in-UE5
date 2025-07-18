@@ -71,7 +71,7 @@ AActor* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
 	(
 	AActor* Requester,
 	AActor* Weapon,
-	FTransform Transform
+	const FTransform& Transform
 	)
 {
 	for(ABaseProjectile* Projectile : ProjectilePool)

@@ -47,13 +47,13 @@ protected:
 	//Variables
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float speed = 8000.0f;
+	float Speed = 8000.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float timeToLive = 2.0f;
+	float TimeToLive = 2.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float gravityScale = 0.0f;
+	float GravityScale = 0.0f;
 
 	UPROPERTY()
 	AActor* CurrentWeapon;
@@ -66,16 +66,16 @@ protected:
 
 	UFUNCTION()
 	void OnHit
-	(
+		(
 		UPrimitiveComponent* HitComponent,
 		AActor* OtherActor,
 		UPrimitiveComponent* OtherComp,
 		FVector NormalImpulse,
-		const FHitResult& Hit);
+		const FHitResult& Hit
+		);
 
 
 public:	
 
-	virtual void Tick(float DeltaTime) override;
 	
 };

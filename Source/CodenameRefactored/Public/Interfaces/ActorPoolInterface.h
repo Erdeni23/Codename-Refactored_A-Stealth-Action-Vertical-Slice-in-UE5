@@ -21,7 +21,7 @@ class CODENAMEREFACTORED_API IActorPoolInterface
 public:
 	//Для снарядов, класс BaseProjectile в Weapons/BaseProjectile
 	UFUNCTION(BlueprintNativeEvent, Category = "Actor Pool")
-	void SpawnProjectileFromPool(AActor* Requester, AActor* Weapon, FTransform Transform);
+	void SpawnProjectileFromPool(AActor* Requester, AActor* Weapon, const FTransform& Transform);
 	
 	UFUNCTION(BlueprintNativeEvent, Category = "Actor Pool")
 	void ProjectileWasReturnedToPool(AActor* Projectile );

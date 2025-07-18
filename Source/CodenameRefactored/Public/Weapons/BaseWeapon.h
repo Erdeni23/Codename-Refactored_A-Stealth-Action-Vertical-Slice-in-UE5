@@ -30,7 +30,7 @@ public:
 	void InitiateWeapon(USkeletalMeshComponent* OwnerSkeletalMeshComponent, UCapsuleComponent* OwnerCapsuleComponent);
 
 	UFUNCTION(BlueprintCallable)
-	void ShootWeapon(FTransform Transform);
+	void ShootWeapon(const FTransform& Transform);
 
 
 	
