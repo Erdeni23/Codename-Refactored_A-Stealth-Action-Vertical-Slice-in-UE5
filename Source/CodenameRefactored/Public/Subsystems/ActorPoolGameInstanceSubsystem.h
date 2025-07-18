@@ -39,7 +39,6 @@ public:
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject")) 
 	AActor* SpawnProjectileFromPool
 	   (
-
 	   AActor* Requester,
 	   AActor* Weapon,
 	   FTransform Transform

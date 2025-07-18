@@ -10,8 +10,8 @@
 #include "TimerManager.h"
 
 //Custom
-#include "Interfaces/ActorPoolInterface.h"
 
+#include "Interfaces/ActorPoolInterface.h"
 
 ABaseProjectile::ABaseProjectile()
 {
@@ -41,16 +41,22 @@ ABaseProjectile::ABaseProjectile()
 void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 {
 	
-	if (!Requester || !Weapon)
+	if (!Weapon)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Error: %s has a nullptr as a Requester or a Weapon"), *GetName());
+		UE_LOG(LogTemp, Error, TEXT("%s has a nullptr as a Weapon"), *GetName());
+		return;
+	}
+	if (!Requester )
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has a nullptr as a Requester"), *GetName());
 		return;
 	}
 	
 	bIsActive = true;
-
+	CurrentWeapon = Weapon;
+	
 	BoxCollision->IgnoreActorWhenMoving(Requester, bIsActive);
-	BoxCollision->IgnoreActorWhenMoving(Weapon, bIsActive);
+	BoxCollision->IgnoreActorWhenMoving(CurrentWeapon, bIsActive);
 
 	//Включение расчета логики для снаряда если активен
 	ProjectileMovementComponent->Velocity = GetActorForwardVector() * speed;
@@ -66,9 +72,9 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 	GetWorld()->GetTimerManager().SetTimer
 	(
 	TimeToLiveTimer,							
-	[this, Weapon]()
+	[this]()
 	{
-		DeactivateProjectile(Weapon);
+		DeactivateProjectile();
 	},
 	timeToLive,                    
 	false
@@ -77,7 +83,7 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 }
 
 
-void ABaseProjectile::DeactivateProjectile(AActor* Weapon)
+void ABaseProjectile::DeactivateProjectile()
 {
 	
 	BoxCollision->ClearMoveIgnoreActors();
@@ -91,9 +97,10 @@ void ABaseProjectile::DeactivateProjectile(AActor* Weapon)
 	ProjectileMovementComponent->Velocity = FVector::ZeroVector;
 	ProjectileMovementComponent->Deactivate();
 
-	//отправляем референс оружию, для настройки коллизии
-	if (Weapon)
-		IActorPoolInterface::Execute_ProjectileWasReturnedToPool(Weapon,this);
+	if (CurrentWeapon)
+		IActorPoolInterface::Execute_ProjectileWasReturnedToPool(CurrentWeapon, this);
+	
+	CurrentWeapon = nullptr;
 	
 }
 
@@ -108,10 +115,22 @@ void ABaseProjectile::BeginPlay()
 }
 
 
-void ABaseProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) 
+void ABaseProjectile::OnHit
+	(
+	UPrimitiveComponent* HitComponent, 
+	AActor* OtherActor, 
+	UPrimitiveComponent* OtherComp, 
+	FVector NormalImpulse, 
+	const FHitResult& Hit
+	) 
 {
+	if (OtherActor)
+		OtherActor->Destroy(); //плейсхолдер до введения системы урона
+	Hit.BoneName;
+	NormalImpulse;
+	HitComponent;
 	DeactivateProjectile();
-
+	
 }
 
 

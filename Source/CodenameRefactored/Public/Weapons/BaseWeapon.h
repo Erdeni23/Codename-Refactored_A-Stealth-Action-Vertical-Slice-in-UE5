@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Interfaces/ActorPoolInterface.h"
+
 #include "BaseWeapon.generated.h"
 
 class USkeletalMeshComponent;
@@ -13,7 +15,7 @@ class UActorPoolGameInstanceSubsystem;
 
 
 UCLASS(Blueprintable)
-class CODENAMEREFACTORED_API ABaseWeapon : public AActor
+class CODENAMEREFACTORED_API ABaseWeapon : public AActor, public IActorPoolInterface
 {
 	GENERATED_BODY()
 	
@@ -30,8 +32,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void ShootWeapon(FTransform Transform);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void somethingsomething();
+
 	
 protected:
 	
@@ -52,7 +53,10 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UCapsuleComponent> OwnerCapsule;	
 
+
 public:
+	
+	virtual void ProjectileWasReturnedToPool_Implementation(AActor* Projectile) override;
 	
 	virtual void Tick(float DeltaTime) override;
 

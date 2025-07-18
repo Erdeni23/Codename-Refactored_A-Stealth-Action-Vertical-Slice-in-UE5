@@ -21,7 +21,6 @@ void UActorPoolGameInstanceSubsystem::Initialize(FSubsystemCollectionBase& Colle
 	Super::Initialize(Collection);
 	UE_LOG(LogTemp, Warning, TEXT("ObjectPoolSubsystem has been initialized"));
 	
-	
 	GetWorld()->GetTimerManager().SetTimer
 			(
 			TimerHandle, 
@@ -44,13 +43,10 @@ void UActorPoolGameInstanceSubsystem::Init()
 
 	for (int i = 0; i < PoolSize; i++)
 	{
-		ABaseProjectile* NewActor = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, FTransform(FVector::ZeroVector), SpawnParams);
-
-		ProjectilePool.Add(NewActor);
-		
+		ABaseProjectile* ProjectileObject = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, FTransform(FVector::ZeroVector), SpawnParams);
+		ProjectilePool.Add(ProjectileObject);
 	}
 }
-
 
 
 UWorld* UActorPoolGameInstanceSubsystem::GetWorld() const
@@ -73,7 +69,6 @@ void UActorPoolGameInstanceSubsystem::Deinitialize()
 
 AActor* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
 	(
-
 	AActor* Requester,
 	AActor* Weapon,
 	FTransform Transform
@@ -93,3 +88,7 @@ AActor* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
 	UE_LOG(LogTemp, Warning, TEXT("No available Projectile to Pool, please modify ActorPoolSize parameter in Class Defaults"));
 	return nullptr;
 }
+
+
+
+	

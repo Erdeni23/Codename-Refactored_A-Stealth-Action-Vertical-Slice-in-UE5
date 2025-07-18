@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
 #include "BaseProjectile.generated.h"
+
 
 class UBoxComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
-class AActor;
 
 
 UCLASS(Blueprintable)
@@ -54,11 +55,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float gravityScale = 0.0f;
 
+	UPROPERTY()
+	AActor* CurrentWeapon;
+
 	//Functions		
 	virtual void BeginPlay() override;
 	
 	UFUNCTION()
-	virtual void DeactivateProjectile(AActor* Weapon = nullptr);
+	virtual void DeactivateProjectile();
 
 	UFUNCTION()
 	void OnHit

@@ -14,6 +14,7 @@ ABaseWeapon::ABaseWeapon()
 	
 }
 
+
 void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
@@ -30,18 +31,20 @@ void ABaseWeapon::InitiateWeapon(USkeletalMeshComponent* OwnerSkeletalMeshCompon
 	GameInstance = GetGameInstance();
 	ActorPoolSubsystem = GameInstance->GetSubsystem<UActorPoolGameInstanceSubsystem>();
 	
-	
 }
 
 
 void ABaseWeapon::ShootWeapon(FTransform Transform)
 {
 	AActor* Projectile = ActorPoolSubsystem->SpawnProjectileFromPool(GunOwner, this, Transform);
+
+	if (!Projectile)
+		return;
 	
 	SkeletalMesh->IgnoreActorWhenMoving(Projectile, true);
 	OwnerSkeletalMesh->IgnoreActorWhenMoving(Projectile, true);
 	OwnerCapsule->IgnoreActorWhenMoving(Projectile, true);
-	somethingsomething();
+	
 }
 
 
@@ -51,3 +54,13 @@ void ABaseWeapon::Tick(float DeltaTime)
 
 }
 
+void ABaseWeapon::ProjectileWasReturnedToPool_Implementation(AActor* ProjectileToReturn)
+{
+	if (!ProjectileToReturn)
+		return;
+	
+	SkeletalMesh->IgnoreActorWhenMoving(ProjectileToReturn, false);
+	OwnerSkeletalMesh->IgnoreActorWhenMoving(ProjectileToReturn, false);
+	OwnerCapsule->IgnoreActorWhenMoving(ProjectileToReturn, false);
+	
+}
