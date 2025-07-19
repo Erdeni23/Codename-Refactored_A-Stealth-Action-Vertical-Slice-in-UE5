@@ -11,7 +11,7 @@
 class UBoxComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
-
+class UActorPoolGameInstanceSubsystem;
 
 UCLASS(Blueprintable)
 class CODENAMEREFACTORED_API ABaseProjectile : public AActor
@@ -26,13 +26,21 @@ public:
 	UPROPERTY()
 	bool bIsActive;
 
+	int32 ProjectileIndex = INDEX_NONE;
+
 	//Functions
 	UFUNCTION()
 	virtual void ActivateProjectile(AActor* Requester = nullptr, AActor* Weapon = nullptr);
+
+	UFUNCTION()
+	virtual void DeactivateProjectile();
 	
 protected:
 	
 	//Components
+	UPROPERTY()
+	TObjectPtr<UActorPoolGameInstanceSubsystem> ActorPoolSubsystem;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UBoxComponent> BoxCollision;
 
@@ -63,9 +71,6 @@ protected:
 
 	//Functions		
 	virtual void BeginPlay() override;
-	
-	UFUNCTION()
-	virtual void DeactivateProjectile();
 
 	UFUNCTION()
 	void OnHit

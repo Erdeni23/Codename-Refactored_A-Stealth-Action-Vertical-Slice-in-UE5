@@ -2,7 +2,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Interfaces/ActorPoolInterface.h"
 #include "Subsystems/GameInstanceSubsystem.h"
+
+
 
 
 #include "ActorPoolGameInstanceSubsystem.generated.h"
@@ -11,7 +14,7 @@ class ABaseProjectile;
 
 
 UCLASS(Blueprintable)
-class CODENAMEREFACTORED_API UActorPoolGameInstanceSubsystem : public UGameInstanceSubsystem
+class CODENAMEREFACTORED_API UActorPoolGameInstanceSubsystem : public UGameInstanceSubsystem, public IActorPoolInterface
 {
 	GENERATED_BODY()
 public:
@@ -20,6 +23,7 @@ public:
 
 	virtual void Deinitialize() override;
 
+	virtual void ReturnProjectileToPool_Implementation(ABaseProjectile* Projectile) override;
 	/*
 	создаем проверку наличия сабсистемы на блюпринтах, для того чтобы иметь
 	только одну инстанцию в игре
@@ -53,12 +57,15 @@ protected:
 	UPROPERTY()
 	TArray<ABaseProjectile*> ProjectilePool;
 
+	TQueue<int32> FreeActorIndexes;
+	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Pool Settings")
 	TSubclassOf<ABaseProjectile> ProjectileClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pool Settings")
 	int32 PoolSize = 200;
-
+	
 	FTimerHandle TimerHandle;
 	
 protected:

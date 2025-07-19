@@ -10,7 +10,7 @@
 #include "TimerManager.h"
 
 //Custom
-
+#include "Subsystems/ActorPoolGameInstanceSubsystem.h"
 #include "Interfaces/ActorPoolInterface.h"
 
 ABaseProjectile::ABaseProjectile()
@@ -102,6 +102,9 @@ void ABaseProjectile::DeactivateProjectile()
 	}
 	ComponentsToIgnore.Empty();
 	
+	if (bIsActive)
+		IActorPoolInterface::Execute_ReturnProjectileToPool(ActorPoolSubsystem,this);
+	
 	bIsActive = false;
 
 	//Отключение расчета логики для снаряда если неактивен
@@ -112,15 +115,14 @@ void ABaseProjectile::DeactivateProjectile()
 	ProjectileMovementComponent->Deactivate();
 	
 	CurrentWeapon = nullptr;
-	
+
 }
 
 
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	DeactivateProjectile();
-
+	ActorPoolSubsystem = GetGameInstance()->GetSubsystem<UActorPoolGameInstanceSubsystem>();
 	BoxCollision->OnComponentHit.AddDynamic(this,&ABaseProjectile::OnHit);
 	
 }
@@ -135,8 +137,7 @@ void ABaseProjectile::OnHit
 	const FHitResult& Hit
 	) 
 {
-	if (OtherActor)
-		OtherActor->Destroy();
+
 
 	DeactivateProjectile();
 	

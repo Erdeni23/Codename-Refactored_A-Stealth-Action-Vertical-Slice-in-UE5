@@ -4,7 +4,7 @@
 
 #include "Weapons/BaseProjectile.h"
 #include "TimerManager.h"
-
+#include "Containers/Queue.h"
 
 bool UActorPoolGameInstanceSubsystem::ShouldCreateSubsystem(UObject* Outer) const 
 {
@@ -44,7 +44,9 @@ void UActorPoolGameInstanceSubsystem::Init()
 	for (int i = 0; i < PoolSize; i++)
 	{
 		ABaseProjectile* ProjectileObject = GetWorld()->SpawnActor<ABaseProjectile>(ProjectileClass, FTransform(FVector::ZeroVector), SpawnParams);
+		ProjectileObject->DeactivateProjectile();
 		ProjectilePool.Add(ProjectileObject);
+		FreeActorIndexes.Enqueue(i);
 	}
 }
 
@@ -52,8 +54,10 @@ void UActorPoolGameInstanceSubsystem::Init()
 UWorld* UActorPoolGameInstanceSubsystem::GetWorld() const
 {
 	UGameInstance* MyGameInstance = GetGameInstance();
+	
 	if (MyGameInstance)
 		return MyGameInstance->GetWorld();
+	
 	UE_LOG(LogTemp, Error, TEXT("Game Instance has a nullptr, please check Project Settings"));
 	
 	return nullptr;
@@ -74,21 +78,29 @@ AActor* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
 	const FTransform& Transform
 	)
 {
-	for(ABaseProjectile* Projectile : ProjectilePool)
+	if (FreeActorIndexes.IsEmpty())
 	{
-		if (Projectile && !Projectile->bIsActive)
-		{	
-			Projectile->SetActorTransform(Transform);
-			Projectile->ActivateProjectile(Requester, Weapon);
-			
-			return Projectile;
-		}
+		UE_LOG(LogTemp, Warning, TEXT("No available Projectile to Pool, please modify ActorPoolSize parameter in Class Defaults"));
+		return nullptr;
 	}
-	
-	UE_LOG(LogTemp, Warning, TEXT("No available Projectile to Pool, please modify ActorPoolSize parameter in Class Defaults"));
-	return nullptr;
+	int32 PooledIndex;
+	FreeActorIndexes.Dequeue(PooledIndex);
+	ABaseProjectile* CurrentProjectile = ProjectilePool[PooledIndex];
+
+	CurrentProjectile->ProjectileIndex = PooledIndex;
+	CurrentProjectile->SetActorTransform(Transform);
+	CurrentProjectile->ActivateProjectile(Requester, Weapon);
+			
+	return CurrentProjectile;
+
 }
 
+void UActorPoolGameInstanceSubsystem::ReturnProjectileToPool_Implementation(ABaseProjectile* Projectile)
+{
+	int32 ReturnIndex = Projectile->ProjectileIndex;
+	FreeActorIndexes.Enqueue(ReturnIndex); 
+	
+}
 
 
 	

@@ -21,7 +21,7 @@ class CODENAMEREFACTORED_API IActorPoolInterface
 public:
 	//Для снарядов, класс BaseProjectile в Weapons/BaseProjectile
 	UFUNCTION(BlueprintNativeEvent, Category = "Actor Pool")
-	void ProjectileWasReturnedToPool(AActor* Projectile );
+	void ReturnProjectileToPool(ABaseProjectile* Projectile);
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Actor Pool")
 	TArray<UPrimitiveComponent*> GetComponentsToIgnoreForCollision() const;
