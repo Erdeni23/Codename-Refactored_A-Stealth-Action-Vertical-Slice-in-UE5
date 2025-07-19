@@ -53,11 +53,21 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 	}
 	
 	bIsActive = true;
-	CurrentWeapon = Weapon;
 	
+	CurrentWeapon = Weapon;
+	SetOwner(Requester);
+
+	//Компоненты пули игнорируют Стрелка, Компоненты стрелка игнорируют пулю
 	BoxCollision->IgnoreActorWhenMoving(Requester, bIsActive);
 	BoxCollision->IgnoreActorWhenMoving(CurrentWeapon, bIsActive);
 
+	ComponentsToIgnore = IActorPoolInterface::Execute_GetComponentsToIgnoreForCollision(Requester);
+	for (UPrimitiveComponent* Component : ComponentsToIgnore)
+	{
+		if (Component)
+			Component->IgnoreActorWhenMoving(this, true);
+	}
+	
 	//Включение расчета логики для снаряда если активен
 	ProjectileMovementComponent->Velocity = GetActorForwardVector() * Speed;
 	ProjectileMovementComponent->Activate();
@@ -82,8 +92,16 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 
 void ABaseProjectile::DeactivateProjectile()
 {
+	BoxCollision->IgnoreActorWhenMoving(GetOwner(), false);
+	BoxCollision->IgnoreActorWhenMoving(CurrentWeapon, false);
 	
-	BoxCollision->ClearMoveIgnoreActors();
+	for (UPrimitiveComponent* Component : ComponentsToIgnore)
+	{
+		if (Component)
+			Component->IgnoreActorWhenMoving(this, false);
+	}
+	ComponentsToIgnore.Empty();
+	
 	bIsActive = false;
 
 	//Отключение расчета логики для снаряда если неактивен
@@ -92,9 +110,6 @@ void ABaseProjectile::DeactivateProjectile()
 	
 	ProjectileMovementComponent->Velocity = FVector::ZeroVector;
 	ProjectileMovementComponent->Deactivate();
-
-	if (CurrentWeapon)
-		IActorPoolInterface::Execute_ProjectileWasReturnedToPool(CurrentWeapon, this);
 	
 	CurrentWeapon = nullptr;
 	

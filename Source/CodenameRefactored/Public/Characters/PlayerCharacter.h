@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-
+#include "Interfaces/ActorPoolInterface.h"
 
 #include "PlayerCharacter.generated.h"
 
@@ -15,14 +15,14 @@
 class UAdvancedMovementComponent;
 
 UCLASS()
-class CODENAMEREFACTORED_API APlayerCharacter : public ACharacter
+class CODENAMEREFACTORED_API APlayerCharacter : public ACharacter, public IActorPoolInterface
 {
 	GENERATED_BODY()
 
 public:
 	
 	APlayerCharacter();
-
+	
 protected:
 	
     //Components
@@ -32,8 +32,11 @@ protected:
 	//Functions
 	virtual void BeginPlay() override;
 
+	virtual TArray<UPrimitiveComponent*> GetComponentsToIgnoreForCollision_Implementation() const override;
+
 	//Variables
 	FVector2D MovementVector;
+	
 	FVector2D MouseLookVector;
 	
 	float ForwardVectorInputValue = 0.0f; //Прокси-переменная для передачи MovementVector.Y в спринт
@@ -43,6 +46,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
 	float DefaultSpeed = 600.0f;
+
+	
 
 public:
 	

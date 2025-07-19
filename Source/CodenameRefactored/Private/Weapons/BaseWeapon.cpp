@@ -2,7 +2,6 @@
 
 
 #include "Weapons/BaseWeapon.h"
-#include "Components/CapsuleComponent.h"
 #include "Subsystems/ActorPoolGameInstanceSubsystem.h"
 
 
@@ -25,10 +24,9 @@ void ABaseWeapon::BeginPlay()
 	
 }
 
-void ABaseWeapon::PickUp(USkeletalMeshComponent* OwnerSkeletalMeshComponent, UCapsuleComponent* OwnerCapsuleComponent, bool bEquip)
+void ABaseWeapon::PickUp(USkeletalMeshComponent* OwnerSkeletalMeshComponent, bool bEquip)
 {
 	OwnerSkeletalMesh = OwnerSkeletalMeshComponent;
-	OwnerCapsule = OwnerCapsuleComponent;
 	SetOwner(OwnerSkeletalMeshComponent->GetOwner());
 	GunOwner = GetOwner();
 	
@@ -41,13 +39,9 @@ void ABaseWeapon::PickUp(USkeletalMeshComponent* OwnerSkeletalMeshComponent, UCa
 void ABaseWeapon::ShootWeapon(const FTransform& Transform)
 {
 	AActor* Projectile = ActorPoolSubsystem->SpawnProjectileFromPool(GunOwner, this, Transform);
-
-	if (!Projectile)
-		return;
 	
-	SkeletalMesh->IgnoreActorWhenMoving(Projectile, true);
-	OwnerSkeletalMesh->IgnoreActorWhenMoving(Projectile, true);
-	OwnerCapsule->IgnoreActorWhenMoving(Projectile, true);
+	if (!Projectile)
+		UE_LOG(LogTemp, Warning, TEXT("Projectile has a nullptr! Please modify Actor Pool Size!"));
 	
 }
 
@@ -55,16 +49,4 @@ void ABaseWeapon::EquipWeapon(USceneComponent* OwnerSkeletalMeshComponent)
 {
 	SetActorHiddenInGame(false);
 	AttachToComponent(OwnerSkeletalMeshComponent, AttachmentRules, AttachmentSocket);
-}
-
-
-void ABaseWeapon::ProjectileWasReturnedToPool_Implementation(AActor* ProjectileToReturn)
-{
-	if (!ProjectileToReturn)
-		return;
-	
-	SkeletalMesh->IgnoreActorWhenMoving(ProjectileToReturn, false);
-	OwnerSkeletalMesh->IgnoreActorWhenMoving(ProjectileToReturn, false);
-	OwnerCapsule->IgnoreActorWhenMoving(ProjectileToReturn, false);
-	
 }

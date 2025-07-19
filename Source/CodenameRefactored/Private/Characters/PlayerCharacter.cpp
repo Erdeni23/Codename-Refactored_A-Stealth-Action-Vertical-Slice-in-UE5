@@ -5,6 +5,7 @@
 //Native UE5 components
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/CapsuleComponent.h"
 
 //Custom UE5 components
 #include "Components/AdvancedMovementComponent.h"
@@ -93,4 +94,16 @@ void APlayerCharacter::UnCrouchSlide()
 	
 }
 
+TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision_Implementation() const
+{
+	TArray<UPrimitiveComponent*> ComponentsToIgnore;
+
+	if (GetCapsuleComponent())
+		ComponentsToIgnore.Add(GetCapsuleComponent());
+	
+	if (GetMesh())
+		ComponentsToIgnore.Add(GetMesh());
+	
+	return ComponentsToIgnore;
+}
 

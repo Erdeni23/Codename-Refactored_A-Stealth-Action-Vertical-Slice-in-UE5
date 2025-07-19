@@ -42,6 +42,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 
+	UPROPERTY()
+	TArray<UPrimitiveComponent*> ComponentsToIgnore;
+
 	FTimerHandle TimeToLiveTimer;
 
 	//Variables

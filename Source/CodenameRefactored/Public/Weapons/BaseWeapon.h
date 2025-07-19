@@ -31,7 +31,6 @@ public:
 	void PickUp
 		(
 		USkeletalMeshComponent* OwnerSkeletalMeshComponent,
-		UCapsuleComponent* OwnerCapsuleComponent,
 		bool bEquip
 		);
 
@@ -77,6 +76,6 @@ protected:
 
 public:
 	
-	virtual void ProjectileWasReturnedToPool_Implementation(AActor* Projectile) override;
+	
 	
 };
