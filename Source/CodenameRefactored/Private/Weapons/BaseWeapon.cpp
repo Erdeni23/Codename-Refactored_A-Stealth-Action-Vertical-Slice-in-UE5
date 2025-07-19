@@ -19,17 +19,21 @@ void ABaseWeapon::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	GameInstance = GetGameInstance();
+	ActorPoolSubsystem = GameInstance->GetSubsystem<UActorPoolGameInstanceSubsystem>();
+	
+	
 }
 
-//при спавне обязательно!
-void ABaseWeapon::InitiateWeapon(USkeletalMeshComponent* OwnerSkeletalMeshComponent, UCapsuleComponent* OwnerCapsuleComponent)
+void ABaseWeapon::PickUp(USkeletalMeshComponent* OwnerSkeletalMeshComponent, UCapsuleComponent* OwnerCapsuleComponent, bool bEquip)
 {
 	OwnerSkeletalMesh = OwnerSkeletalMeshComponent;
 	OwnerCapsule = OwnerCapsuleComponent;
+	SetOwner(OwnerSkeletalMeshComponent->GetOwner());
 	GunOwner = GetOwner();
-
-	GameInstance = GetGameInstance();
-	ActorPoolSubsystem = GameInstance->GetSubsystem<UActorPoolGameInstanceSubsystem>();
+	
+	if (bEquip)
+		EquipWeapon(OwnerSkeletalMeshComponent);
 	
 }
 
@@ -47,12 +51,12 @@ void ABaseWeapon::ShootWeapon(const FTransform& Transform)
 	
 }
 
-
-void ABaseWeapon::Tick(float DeltaTime)
+void ABaseWeapon::EquipWeapon(USceneComponent* OwnerSkeletalMeshComponent)
 {
-	Super::Tick(DeltaTime);
-
+	SetActorHiddenInGame(false);
+	AttachToComponent(OwnerSkeletalMeshComponent, AttachmentRules, AttachmentSocket);
 }
+
 
 void ABaseWeapon::ProjectileWasReturnedToPool_Implementation(AActor* ProjectileToReturn)
 {

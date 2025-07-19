@@ -71,10 +71,8 @@ void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
 	GetWorld()->GetTimerManager().SetTimer
 	(
 	TimeToLiveTimer,							
-	[this]()
-	{
-		DeactivateProjectile();
-	},
+	this,
+	&ABaseProjectile::DeactivateProjectile,
 	TimeToLive,                    
 	false
 	);
@@ -123,10 +121,8 @@ void ABaseProjectile::OnHit
 	) 
 {
 	if (OtherActor)
-		OtherActor->Destroy(); //плейсхолдер до введения системы урона
-	Hit.BoneName;
-	NormalImpulse;
-	HitComponent;
+		OtherActor->Destroy();
+
 	DeactivateProjectile();
 	
 }

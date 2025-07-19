@@ -23,41 +23,60 @@ public:
 	
 	ABaseWeapon();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<USkeletalMeshComponent> SkeletalMesh;
-
-	UFUNCTION(BlueprintCallable)
-	void InitiateWeapon(USkeletalMeshComponent* OwnerSkeletalMeshComponent, UCapsuleComponent* OwnerCapsuleComponent);
-
+	//Functions
 	UFUNCTION(BlueprintCallable)
 	void ShootWeapon(const FTransform& Transform);
+	
+	UFUNCTION(BlueprintCallable)
+	void PickUp
+		(
+		USkeletalMeshComponent* OwnerSkeletalMeshComponent,
+		UCapsuleComponent* OwnerCapsuleComponent,
+		bool bEquip
+		);
 
-
+	//Variables
+	FAttachmentTransformRules AttachmentRules =
+	{
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget,
+		true
+	};
 	
 protected:
-	
-	virtual void BeginPlay() override;
 
-	UPROPERTY()
-	TObjectPtr<AActor> GunOwner;
-
+	//Components
 	UPROPERTY()
 	TObjectPtr<UGameInstance> GameInstance;
 
 	UPROPERTY()
 	TObjectPtr<UActorPoolGameInstanceSubsystem> ActorPoolSubsystem;
 	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<USkeletalMeshComponent> SkeletalMesh;
+	
+	UPROPERTY()
+	TObjectPtr<AActor> GunOwner;
+
 	UPROPERTY()
 	TObjectPtr<USkeletalMeshComponent> OwnerSkeletalMesh;
 
 	UPROPERTY()
-	TObjectPtr<UCapsuleComponent> OwnerCapsule;	
+	TObjectPtr<UCapsuleComponent> OwnerCapsule;
+	
+	//Functions
+	virtual void BeginPlay() override;
+	
+	UFUNCTION()
+	void EquipWeapon(USceneComponent* OwnerSkeletalMeshComponent);
 
+	//Variables
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters);
+	FName AttachmentSocket;
 
 public:
 	
 	virtual void ProjectileWasReturnedToPool_Implementation(AActor* Projectile) override;
 	
-	virtual void Tick(float DeltaTime) override;
-
 };
