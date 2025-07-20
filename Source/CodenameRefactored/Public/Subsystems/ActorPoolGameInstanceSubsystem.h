@@ -5,10 +5,8 @@
 #include "Interfaces/ActorPoolInterface.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 
-
-
-
 #include "ActorPoolGameInstanceSubsystem.generated.h"
+
 
 class ABaseProjectile;
 
@@ -48,7 +46,6 @@ public:
 	   const FTransform& Transform
 	   );
 
-
 protected:
 	
 	UFUNCTION()
@@ -58,7 +55,6 @@ protected:
 	TArray<ABaseProjectile*> ProjectilePool;
 
 	TQueue<int32> FreeActorIndexes;
-	
 
 	UPROPERTY(EditDefaultsOnly, Category = "Pool Settings")
 	TSubclassOf<ABaseProjectile> ProjectileClass;
@@ -67,14 +63,7 @@ protected:
 	int32 PoolSize = 200;
 	
 	FTimerHandle TimerHandle;
-	
-protected:
-
-
 
 private:
-
 	
-
-
 };

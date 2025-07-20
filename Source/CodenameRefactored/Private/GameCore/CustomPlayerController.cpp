@@ -12,6 +12,7 @@
 //Custom
 #include "Characters/PlayerCharacter.h"
 
+
 void ACustomPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -30,6 +31,7 @@ void ACustomPlayerController::BeginPlay()
 	
 }
 
+
 void ACustomPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -40,6 +42,7 @@ void ACustomPlayerController::SetupInputComponent()
 		UE_LOG(LogTemp, Error, TEXT("EnhancedInputComponent was not loaded, check Plugins in Editor Preference"));
 	
 }
+
 
 void ACustomPlayerController::OnPossess(APawn* CurrentPawn)
 {

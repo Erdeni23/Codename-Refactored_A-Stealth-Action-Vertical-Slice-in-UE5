@@ -15,7 +15,8 @@ APlayerCharacter::APlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
-	AdvancedMovementComponent = CreateDefaultSubobject<UAdvancedMovementComponent>(TEXT("AdvMoveComp"));;
+	AdvancedMovementComponent = CreateDefaultSubobject<UAdvancedMovementComponent>(TEXT("AdvMoveComp"));
+	
 }
 
 
@@ -29,6 +30,7 @@ void APlayerCharacter::BeginPlay()
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	
 }
 
 
@@ -65,10 +67,9 @@ void APlayerCharacter::SprintBegin()
 	if (GetCharacterMovement())
 	{
 		if (ForwardVectorInputValue >= 0.9f) // если пытается бежать вдоль оси Forward Vector то
-		{
 			GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
-		}
 	}
+	
 }
 
 
@@ -87,12 +88,14 @@ void APlayerCharacter::CrouchSlide()
 	
 }
 
+
 void APlayerCharacter::UnCrouchSlide()
 {
 	if (AdvancedMovementComponent)
 		AdvancedMovementComponent->CrouchSlideCompleted();
 	
 }
+
 
 TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision_Implementation() const
 {
@@ -105,5 +108,6 @@ TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision
 		ComponentsToIgnore.Add(GetMesh());
 	
 	return ComponentsToIgnore;
+	
 }
 

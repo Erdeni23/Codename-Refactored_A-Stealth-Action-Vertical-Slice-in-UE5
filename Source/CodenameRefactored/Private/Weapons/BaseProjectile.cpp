@@ -13,6 +13,7 @@
 #include "Subsystems/ActorPoolGameInstanceSubsystem.h"
 #include "Interfaces/ActorPoolInterface.h"
 
+
 ABaseProjectile::ABaseProjectile()
 {
  	
@@ -137,8 +138,6 @@ void ABaseProjectile::OnHit
 	const FHitResult& Hit
 	) 
 {
-
-
 	DeactivateProjectile();
 	
 }

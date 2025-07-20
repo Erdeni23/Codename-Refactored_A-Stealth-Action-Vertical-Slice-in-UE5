@@ -22,41 +22,14 @@ class CODENAMEREFACTORED_API APlayerCharacter : public ACharacter, public IActor
 public:
 	
 	APlayerCharacter();
-	
-protected:
-	
-    //Components
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
-	TObjectPtr<UAdvancedMovementComponent> AdvancedMovementComponent;
-	
+
 	//Functions
 	virtual void BeginPlay() override;
-
-	virtual TArray<UPrimitiveComponent*> GetComponentsToIgnoreForCollision_Implementation() const override;
-
-	//Variables
-	FVector2D MovementVector;
-	
-	FVector2D MouseLookVector;
-	
-	float ForwardVectorInputValue = 0.0f; //Прокси-переменная для передачи MovementVector.Y в спринт
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
-	float MaxSprintSpeed = 900.0f;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
-	float DefaultSpeed = 600.0f;
-
-	
-
-public:
 	
 	virtual void Tick(float DeltaTime) override;
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
-public:
+	
 	//Actions bind to Input
 	
 	UFUNCTION()
@@ -76,6 +49,26 @@ public:
 	
 	UFUNCTION()
 	void UnCrouchSlide();
-	
 
+protected:
+	
+    //Components
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UAdvancedMovementComponent> AdvancedMovementComponent;
+
+	virtual TArray<UPrimitiveComponent*> GetComponentsToIgnoreForCollision_Implementation() const override;
+
+	//Variables
+	FVector2D MovementVector;
+	
+	FVector2D MouseLookVector;
+	
+	float ForwardVectorInputValue = 0.0f; //Прокси-переменная для передачи MovementVector.Y в спринт
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
+	float MaxSprintSpeed = 900.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
+	float DefaultSpeed = 600.0f;
+	
 };

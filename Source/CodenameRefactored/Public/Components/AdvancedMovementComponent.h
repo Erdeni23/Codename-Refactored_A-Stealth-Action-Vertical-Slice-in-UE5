@@ -50,7 +50,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Movement|CrouchSlide")
 	float CrouchedCapsuleRadius = 60.0f;
 
-	
 private:
 	
 	//Данные о владельце/компоненты
@@ -76,10 +75,8 @@ private:
 	UPROPERTY()
 	int32 OwnerPlayerIndex = -1;
 
-
 public:
-
-
+	
 	void CrouchSlideBegin();
 	
 	void DoCrouch();
@@ -89,6 +86,5 @@ public:
 	void SlideCompleted();
 	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	
 };

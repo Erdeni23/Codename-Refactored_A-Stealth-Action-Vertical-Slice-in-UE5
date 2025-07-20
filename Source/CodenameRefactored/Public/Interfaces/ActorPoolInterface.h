@@ -26,6 +26,4 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Actor Pool")
 	TArray<UPrimitiveComponent*> GetComponentsToIgnoreForCollision() const;
 	
-
-public:
 };

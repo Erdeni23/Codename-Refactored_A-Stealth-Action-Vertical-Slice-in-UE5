@@ -77,6 +77,7 @@ void UAdvancedMovementComponent::BeginPlay()
 	
 }
 
+
 void UAdvancedMovementComponent::DoCrouch()
 {
 	OwnerCharacter->Crouch();
@@ -93,6 +94,7 @@ void UAdvancedMovementComponent::DoCrouch()
 	);
 	
 }
+
 
 void UAdvancedMovementComponent::CrouchSlideBegin()
 {
@@ -121,6 +123,7 @@ void UAdvancedMovementComponent::CrouchSlideBegin()
 	
 }
 
+
 void UAdvancedMovementComponent::SlideCompleted()
 {
 	if (!OwnerMovementComponent || !OwnerCharacter)
@@ -139,11 +142,14 @@ void UAdvancedMovementComponent::SlideCompleted()
 	
 }
 
+
 void UAdvancedMovementComponent::CrouchSlideCompleted()
 {
 	OwnerCharacter->UnCrouch();
 	SlideCompleted();
+	
 }
+
 
 void UAdvancedMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {

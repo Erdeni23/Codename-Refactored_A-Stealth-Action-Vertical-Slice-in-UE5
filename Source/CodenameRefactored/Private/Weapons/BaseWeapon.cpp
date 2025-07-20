@@ -21,8 +21,8 @@ void ABaseWeapon::BeginPlay()
 	GameInstance = GetGameInstance();
 	ActorPoolSubsystem = GameInstance->GetSubsystem<UActorPoolGameInstanceSubsystem>();
 	
-	
 }
+
 
 void ABaseWeapon::PickUp(USkeletalMeshComponent* OwnerSkeletalMeshComponent, bool bEquip)
 {
@@ -45,8 +45,11 @@ void ABaseWeapon::ShootWeapon(const FTransform& Transform)
 	
 }
 
+
 void ABaseWeapon::EquipWeapon(USceneComponent* OwnerSkeletalMeshComponent)
 {
 	SetActorHiddenInGame(false);
 	AttachToComponent(OwnerSkeletalMeshComponent, AttachmentRules, AttachmentSocket);
+	
 }
+

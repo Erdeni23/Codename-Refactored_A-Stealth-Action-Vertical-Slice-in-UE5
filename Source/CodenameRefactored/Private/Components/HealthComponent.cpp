@@ -6,7 +6,9 @@
 UHealthComponent::UHealthComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
+	
 }
+
 
 void UHealthComponent::TakeDamage(float Damage)
 {
@@ -19,13 +21,17 @@ void UHealthComponent::TakeDamage(float Damage)
 	
 }
 
+
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
+	
 }
+
 
 void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	
 }
 

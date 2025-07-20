@@ -48,6 +48,7 @@ void UActorPoolGameInstanceSubsystem::Init()
 		ProjectilePool.Add(ProjectileObject);
 		FreeActorIndexes.Enqueue(i);
 	}
+	
 }
 
 
@@ -61,6 +62,7 @@ UWorld* UActorPoolGameInstanceSubsystem::GetWorld() const
 	UE_LOG(LogTemp, Error, TEXT("Game Instance has a nullptr, please check Project Settings"));
 	
 	return nullptr;
+	
 }
 
 
@@ -68,6 +70,7 @@ void UActorPoolGameInstanceSubsystem::Deinitialize()
 {
 	UE_LOG(LogTemp, Warning, TEXT("ObjectPoolSubsystem has been deinitialized"));
 	Super::Deinitialize();
+	
 }
 
 
@@ -95,12 +98,10 @@ AActor* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
 
 }
 
+
 void UActorPoolGameInstanceSubsystem::ReturnProjectileToPool_Implementation(ABaseProjectile* Projectile)
 {
 	int32 ReturnIndex = Projectile->ProjectileIndex;
 	FreeActorIndexes.Enqueue(ReturnIndex); 
 	
 }
-
-
-	

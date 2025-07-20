@@ -8,6 +8,7 @@
 
 #include "BaseWeapon.generated.h"
 
+
 class USkeletalMeshComponent;
 class UCapsuleComponent;
 class GameInstance;
@@ -33,15 +34,6 @@ public:
 		USkeletalMeshComponent* OwnerSkeletalMeshComponent,
 		bool bEquip
 		);
-
-	//Variables
-	FAttachmentTransformRules AttachmentRules =
-	{
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::SnapToTarget,
-		EAttachmentRule::SnapToTarget,
-		true
-	};
 	
 protected:
 
@@ -74,8 +66,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters);
 	FName AttachmentSocket;
 
-public:
-	
-	
+	FAttachmentTransformRules AttachmentRules =
+	{
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget,
+		EAttachmentRule::SnapToTarget,
+		true
+	};
 	
 };
