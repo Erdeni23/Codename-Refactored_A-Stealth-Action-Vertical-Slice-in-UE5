@@ -10,6 +10,7 @@
 #include "PlayerCharacter.generated.h"
 
 //UE5 Native
+class UGameplayAbility;
 
 //Custom
 class UAdvancedMovementComponent;
