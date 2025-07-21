@@ -1,6 +1,5 @@
 // Copyright (C) 2025 Erdeni Arsalanov. All Rights Reserved.
 
-
 #include "Weapons/BaseProjectile.h"
 
 //UE5 Native
@@ -35,7 +34,7 @@ ABaseProjectile::ABaseProjectile()
 
 	ProjectileMovementComponent->ProjectileGravityScale = GravityScale;
 	ProjectileMovementComponent->bShouldBounce = false;
-	
+
 }
 
 
@@ -141,6 +140,3 @@ void ABaseProjectile::OnHit
 	DeactivateProjectile();
 	
 }
-
-
-

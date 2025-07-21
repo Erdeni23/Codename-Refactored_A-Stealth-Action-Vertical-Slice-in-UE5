@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Interfaces/ActorPoolInterface.h"
 
 #include "BaseWeapon.generated.h"
 
@@ -16,7 +15,7 @@ class UActorPoolGameInstanceSubsystem;
 
 
 UCLASS(Blueprintable)
-class CODENAMEREFACTORED_API ABaseWeapon : public AActor, public IActorPoolInterface
+class CODENAMEREFACTORED_API ABaseWeapon : public AActor 
 {
 	GENERATED_BODY()
 	
