@@ -5,17 +5,23 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "Interfaces/ActorPoolInterface.h"
+#include "AbilitySystemInterface.h"
 
 #include "PlayerCharacter.generated.h"
 
 //UE5 Native
 
-
 //Custom
 class UAdvancedMovementComponent;
+class UCustomAbilitySystemComponent;
+
 
 UCLASS()
-class CODENAMEREFACTORED_API APlayerCharacter : public ACharacter, public IActorPoolInterface
+class CODENAMEREFACTORED_API APlayerCharacter :
+public ACharacter,
+public IActorPoolInterface,
+public IAbilitySystemInterface
+
 {
 	GENERATED_BODY()
 
@@ -29,6 +35,11 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	//Interfaces
+	virtual TArray<UPrimitiveComponent*> GetComponentsToIgnoreForCollision_Implementation() const override;
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	//Actions bind to Input
 	
@@ -51,12 +62,10 @@ public:
 	void UnCrouchSlide();
 
 protected:
-	
+
     //Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UAdvancedMovementComponent> AdvancedMovementComponent;
-
-	virtual TArray<UPrimitiveComponent*> GetComponentsToIgnoreForCollision_Implementation() const override;
 
 	//Variables
 	FVector2D MovementVector;
@@ -70,5 +79,14 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
 	float DefaultSpeed = 600.0f;
+
+	UPROPERTY()
+	TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;
+
+	//Functions
+	void GiveDefaultAbilities();
 	
 };

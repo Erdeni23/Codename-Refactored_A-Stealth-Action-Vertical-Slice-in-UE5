@@ -9,20 +9,30 @@
 
 //Custom UE5 components
 #include "Components/AdvancedMovementComponent.h"
-
+#include "AbilitySystem/CustomAbilitySystemComponent.h"
 
 APlayerCharacter::APlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
 	AdvancedMovementComponent = CreateDefaultSubobject<UAdvancedMovementComponent>(TEXT("AdvMoveComp"));
-	
+	AbilitySystemComponent = CreateDefaultSubobject<UCustomAbilitySystemComponent>("AbilitySystemComponent");
 }
 
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	if (!AbilitySystemComponent)
+		UE_LOG(LogTemp, Error, TEXT("Ability System Component has a nullptr!"))
+	if (!GetCharacterMovement())
+		UE_LOG(LogTemp, Error, TEXT("Character Movement component has a nullptr!"))
+	if (AdvancedMovementComponent)
+		UE_LOG(LogTemp, Error, TEXT("Advanced Movement Component has a nullptr!"))
+
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
+	GiveDefaultAbilities();
 	
 }
 
@@ -64,37 +74,32 @@ void APlayerCharacter::MouseLook(const FInputActionValue& MouseLookValue)
 
 void APlayerCharacter::SprintBegin()
 {
-	if (GetCharacterMovement())
-	{
-		if (ForwardVectorInputValue >= 0.9f) // если пытается бежать вдоль оси Forward Vector то
-			GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
-	}
+	if (ForwardVectorInputValue >= 0.9f) // если пытается бежать вдоль оси Forward Vector то
+		GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
 	
 }
 
 
 void APlayerCharacter::SprintStop()
 {
-	if (GetCharacterMovement())
-		GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
+	GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
 	
 }
 
 
 void APlayerCharacter::CrouchSlide()
 {
-	if (AdvancedMovementComponent)
-		AdvancedMovementComponent->CrouchSlideBegin();
+	AdvancedMovementComponent->CrouchSlideBegin();
 	
 }
 
 
 void APlayerCharacter::UnCrouchSlide()
 {
-	if (AdvancedMovementComponent)
-		AdvancedMovementComponent->CrouchSlideCompleted();
+	AdvancedMovementComponent->CrouchSlideCompleted();
 	
 }
+
 
 
 TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision_Implementation() const
@@ -108,6 +113,24 @@ TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision
 		ComponentsToIgnore.Add(GetMesh());
 	
 	return ComponentsToIgnore;
+	
+}
+
+
+UAbilitySystemComponent* APlayerCharacter::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+	
+}
+
+
+void APlayerCharacter::GiveDefaultAbilities()
+{
+	for (TSubclassOf<UGameplayAbility> Abilities : DefaultAbilities)
+	{
+		const FGameplayAbilitySpec AbilitySpec(Abilities, 1);
+		AbilitySystemComponent->GiveAbility(AbilitySpec);
+	}
 	
 }
 
