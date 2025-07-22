@@ -15,6 +15,8 @@ class UGameplayAbility;
 //Custom
 class UAdvancedMovementComponent;
 class UCustomAbilitySystemComponent;
+class UCustomAttributeSet;
+class UGameplayEffect;
 
 
 UCLASS()
@@ -26,7 +28,7 @@ public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
-public:
+public: 
 	
 	APlayerCharacter();
 
@@ -38,9 +40,10 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//Interfaces
+	
+	//Start of IActorPoolInterface
 	virtual TArray<UPrimitiveComponent*> GetComponentsToIgnoreForCollision_Implementation() const override;
-
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	//End of IActorPoolInterface
 	
 	//Actions bind to Input
 	
@@ -81,13 +84,41 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
 	float DefaultSpeed = 600.0f;
 
+private:
+
+// Gameplay Ability System 
+public:
+	
+	//Functions
+	virtual UCustomAttributeSet* GetAttributeSet() const;
+
+	//Interfaces
+	
+	//Start of IAbilitySystemInterface
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	//End of IAbilitySystemInterface
+
+protected:
+
+	//Components
 	UPROPERTY()
 	TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY()
+	TObjectPtr<UCustomAttributeSet> AttributeSet;
 
+	//Defaults
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
+	TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
+
 	//Functions
 	void GiveDefaultAbilities();
+
+	void InitDefaultAttributes() const;
+
+private:
 	
 };

@@ -10,12 +10,14 @@
 //Custom UE5 components
 #include "Components/AdvancedMovementComponent.h"
 #include "AbilitySystem/CustomAbilitySystemComponent.h"
+#include "AbilitySystem/CustomAttributeSet.h"
 
 APlayerCharacter::APlayerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
 	
 	AdvancedMovementComponent = CreateDefaultSubobject<UAdvancedMovementComponent>(TEXT("AdvMoveComp"));
+	AttributeSet = CreateDefaultSubobject<UCustomAttributeSet>("AttributeSet");
 	AbilitySystemComponent = CreateDefaultSubobject<UCustomAbilitySystemComponent>("AbilitySystemComponent");
 }
 
@@ -33,21 +35,19 @@ void APlayerCharacter::BeginPlay()
 
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	GiveDefaultAbilities();
-	
+	InitDefaultAttributes(); 
 }
 
 
 void APlayerCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	
 }
 
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
 
@@ -59,7 +59,6 @@ void APlayerCharacter::Move(const FInputActionValue& MovementValue)
 	AddMovementInput(GetActorRightVector(), MovementVector.X);
 
 	ForwardVectorInputValue = MovementVector.Y; // - Прокси, не имеет отношения к Move
-	
 }
 
 
@@ -68,7 +67,6 @@ void APlayerCharacter::MouseLook(const FInputActionValue& MouseLookValue)
 	MouseLookVector = MouseLookValue.Get<FVector2D>();
 	AddControllerYawInput(MouseLookVector.X);
 	AddControllerPitchInput(MouseLookVector.Y);
-	
 }
 
 
@@ -76,30 +74,25 @@ void APlayerCharacter::SprintBegin()
 {
 	if (ForwardVectorInputValue >= 0.9f) // если пытается бежать вдоль оси Forward Vector то
 		GetCharacterMovement()->MaxWalkSpeed = MaxSprintSpeed;
-	
 }
 
 
 void APlayerCharacter::SprintStop()
 {
 	GetCharacterMovement()->MaxWalkSpeed = DefaultSpeed;
-	
 }
 
 
 void APlayerCharacter::CrouchSlide()
 {
 	AdvancedMovementComponent->CrouchSlideBegin();
-	
 }
 
 
 void APlayerCharacter::UnCrouchSlide()
 {
 	AdvancedMovementComponent->CrouchSlideCompleted();
-	
 }
-
 
 
 TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision_Implementation() const
@@ -113,14 +106,20 @@ TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision
 		ComponentsToIgnore.Add(GetMesh());
 	
 	return ComponentsToIgnore;
-	
 }
+
+//Gameplay Ability System
 
 
 UAbilitySystemComponent* APlayerCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
-	
+}
+
+
+UCustomAttributeSet* APlayerCharacter::GetAttributeSet() const
+{
+	return AttributeSet;
 }
 
 
@@ -131,6 +130,23 @@ void APlayerCharacter::GiveDefaultAbilities()
 		const FGameplayAbilitySpec AbilitySpec(Abilities, 1);
 		AbilitySystemComponent->GiveAbility(AbilitySpec);
 	}
-	
 }
 
+void APlayerCharacter::InitDefaultAttributes() const
+{
+	if (!AbilitySystemComponent || !DefaultAttributeEffect)
+		return;
+	
+	FGameplayEffectContextHandle EffectContext = AbilitySystemComponent->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+
+	const FGameplayEffectSpecHandle SpecHandle = AbilitySystemComponent->MakeOutgoingSpec
+		(
+		DefaultAttributeEffect,
+		1.0f,
+		EffectContext
+		);
+
+	if (SpecHandle.IsValid())
+		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
