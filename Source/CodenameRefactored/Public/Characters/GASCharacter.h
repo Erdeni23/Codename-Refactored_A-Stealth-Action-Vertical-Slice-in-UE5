@@ -4,22 +4,53 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+
 #include "GASCharacter.generated.h"
 
+
+class UGameplayAbility;
+class UGameplayEffect;
+class UCustomAbilitySystemComponent;
+class UCustomAttributeSet;
+
 UCLASS()
-class CODENAMEREFACTORED_API AGASCharacter : public ACharacter
+class CODENAMEREFACTORED_API AGASCharacter :
+public ACharacter
+
 {
 	GENERATED_BODY()
 
 public:
+	
 	AGASCharacter();
+	
+	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode) override;
 
-protected:
 	virtual void BeginPlay() override;
+	
+protected:
+	//Functions
+	void GiveDefaultAbilities();
 
-public:	
-	virtual void Tick(float DeltaTime) override;
+	void InitDefaultAttributes() const;
+	
+	virtual UCustomAbilitySystemComponent* GetAbilitySystemComponent() const;
+	
+	virtual UCustomAttributeSet* GetAttributeSet() const;
 
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//Defaults
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
+	TSubclassOf<UGameplayEffect> DefaultAttributeEffect;  // Статы
+
+	//Components
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY()
+	TObjectPtr<UCustomAttributeSet> AttributeSet;
+private:
 
 };

@@ -1,8 +1,8 @@
 // Copyright (C) 2025 Erdeni Arsalanov. All Rights Reserved.
 
 
-#include "GameplayEffectExtension.h"
 #include "AbilitySystem/CustomAbilitySystemComponent.h"
+#include "GameplayEffectExtension.h"
 
 UCustomAbilitySystemComponent::UCustomAbilitySystemComponent()
 {

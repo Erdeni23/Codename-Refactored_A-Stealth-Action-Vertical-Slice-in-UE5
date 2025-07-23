@@ -5,26 +5,18 @@
 #include "CoreMinimal.h"
 #include "Characters/GASCharacter.h"
 #include "Interfaces/ActorPoolInterface.h"
-#include "AbilitySystemInterface.h"
-#include "AbilitySystem/CustomAttributeSet.h"
 
 #include "PlayerCharacter.generated.h"
 
 //UE5 Native
-class UGameplayAbility;
 
 //Custom
 class UAdvancedMovementComponent;
-class UCustomAbilitySystemComponent;
-class UCustomAttributeSet;
-class UGameplayEffect;
-
 
 UCLASS()
 class CODENAMEREFACTORED_API APlayerCharacter :
-public ACharacter,
-public IActorPoolInterface,
-public IAbilitySystemInterface
+public AGASCharacter,
+public IActorPoolInterface
 
 {
 	GENERATED_BODY()
@@ -83,49 +75,8 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
 	float DefaultSpeed = 600.0f;
-
-private:
-
-// Gameplay Ability System 
+	
+	// Gameplay Ability System 
 public:
-	
-	//Functions
-	virtual UCustomAttributeSet* GetAttributeSet() const;
 
-	UFUNCTION(BlueprintImplementableEvent, Category = "Attributes")
-	void OnHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags);
-
-	//Interfaces
-	
-	//Start of IAbilitySystemInterface
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	//End of IAbilitySystemInterface
-
-protected:
-
-	//Components
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
-	
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<UCustomAttributeSet> AttributeSet;
-
-	//Defaults
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
-	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
-	TSubclassOf<UGameplayEffect> DefaultAttributeEffect;  // Статы
-
-	//Functions
-	void GiveDefaultAbilities();
-
-	void InitDefaultAttributes() const;
-
-	void HandleHealthChanged(const FOnAttributeChangeData& Data);
-private:
-	
-	//Functions
-
-	
 };
