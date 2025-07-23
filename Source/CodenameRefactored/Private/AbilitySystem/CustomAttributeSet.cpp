@@ -2,12 +2,11 @@
 
 
 #include "AbilitySystem/CustomAttributeSet.h"
-#include "GameplayEffectExtension.h"
 
 
 UCustomAttributeSet::UCustomAttributeSet()
 {
-	InitHealth(80.0f);
+	
 }
 
 

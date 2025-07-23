@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "GameplayEffectExtension.h"
+
 #include "CustomAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
@@ -35,13 +37,16 @@ public:
     FGameplayAttributeData Stamina;
     ATTRIBUTE_ACCESSORS(UCustomAttributeSet, Stamina);
     	
-    UPROPERTY(BlueprintReadOnly, Category = "Abilities | Gameplay Attribute")
+    UPROPERTY(BlueprintReadOnly, Category = "Abilities | Gameplay Attr	ibute")
     FGameplayAttributeData MaxStamina;
     ATTRIBUTE_ACCESSORS(UCustomAttributeSet, MaxStamina);
+protected:
 
 	//Functions
 	
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
+private:
 };

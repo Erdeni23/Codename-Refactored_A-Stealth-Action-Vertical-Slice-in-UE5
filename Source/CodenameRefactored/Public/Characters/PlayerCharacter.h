@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
+#include "Characters/GASCharacter.h"
 #include "Interfaces/ActorPoolInterface.h"
 #include "AbilitySystemInterface.h"
+#include "AbilitySystem/CustomAttributeSet.h"
 
 #include "PlayerCharacter.generated.h"
 
@@ -46,7 +47,6 @@ public:
 	//End of IActorPoolInterface
 	
 	//Actions bind to Input
-	
 	UFUNCTION()
 	void MouseLook(const FInputActionValue& MouseLookValue);
 
@@ -92,6 +92,9 @@ public:
 	//Functions
 	virtual UCustomAttributeSet* GetAttributeSet() const;
 
+	UFUNCTION(BlueprintImplementableEvent, Category = "Attributes")
+	void OnHealthChanged(float DeltaValue, const FGameplayTagContainer& EventTags);
+
 	//Interfaces
 	
 	//Start of IAbilitySystemInterface
@@ -101,10 +104,10 @@ public:
 protected:
 
 	//Components
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UCustomAbilitySystemComponent> AbilitySystemComponent;
 	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UCustomAttributeSet> AttributeSet;
 
 	//Defaults
@@ -112,13 +115,17 @@ protected:
 	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
-	TSubclassOf<UGameplayEffect> DefaultAttributeEffect;
+	TSubclassOf<UGameplayEffect> DefaultAttributeEffect;  // Статы
 
 	//Functions
 	void GiveDefaultAbilities();
 
 	void InitDefaultAttributes() const;
 
+	void HandleHealthChanged(const FOnAttributeChangeData& Data);
 private:
+	
+	//Functions
+
 	
 };

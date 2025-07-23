@@ -6,11 +6,11 @@
 #include "InputActionValue.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameplayEffect.h"
 
 //Custom UE5 components
 #include "Components/AdvancedMovementComponent.h"
 #include "AbilitySystem/CustomAbilitySystemComponent.h"
-#include "AbilitySystem/CustomAttributeSet.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -35,7 +35,10 @@ void APlayerCharacter::BeginPlay()
 
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	GiveDefaultAbilities();
-	InitDefaultAttributes(); 
+	InitDefaultAttributes();
+
+	//Привязываем изменение хп к событию, для использования в HUD/Blueprint
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributeSet->GetHealthAttribute()).AddUObject(this, &APlayerCharacter::HandleHealthChanged);
 }
 
 
@@ -108,9 +111,8 @@ TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision
 	return ComponentsToIgnore;
 }
 
+
 //Gameplay Ability System
-
-
 UAbilitySystemComponent* APlayerCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -132,6 +134,7 @@ void APlayerCharacter::GiveDefaultAbilities()
 	}
 }
 
+
 void APlayerCharacter::InitDefaultAttributes() const
 {
 	if (!AbilitySystemComponent || !DefaultAttributeEffect)
@@ -149,4 +152,14 @@ void APlayerCharacter::InitDefaultAttributes() const
 
 	if (SpecHandle.IsValid())
 		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+}
+
+void APlayerCharacter::HandleHealthChanged(const FOnAttributeChangeData& Data)
+{
+	float NewHealth = Data.NewValue;
+	float OldHealth = Data.OldValue;
+
+	float DeltaValue = NewHealth - OldHealth;
+
+	OnHealthChanged(DeltaValue, FGameplayTagContainer());
 }
