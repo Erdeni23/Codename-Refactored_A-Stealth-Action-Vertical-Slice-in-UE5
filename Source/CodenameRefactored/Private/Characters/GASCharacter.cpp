@@ -2,6 +2,9 @@
 
 
 #include "Characters/GASCharacter.h"
+#include "Weapons/BaseWeapon.h"
+
+//Gameplay Ability System
 #include "AbilitySystem/CustomAttributeSet.h"
 #include "AbilitySystem/CustomAbilitySystemComponent.h"
 

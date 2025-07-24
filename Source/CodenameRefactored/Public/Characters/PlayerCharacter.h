@@ -9,9 +9,11 @@
 #include "PlayerCharacter.generated.h"
 
 //UE5 Native
+class APlayerCameraManager;
 
 //Custom
 class UAdvancedMovementComponent;
+
 
 UCLASS()
 class CODENAMEREFACTORED_API APlayerCharacter :
@@ -59,14 +61,26 @@ public:
 
 protected:
 
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	void Interact();
+	
     //Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UAdvancedMovementComponent> AdvancedMovementComponent;
+
+	UPROPERTY()
+	TObjectPtr<APlayerCameraManager> PlayerCameraManager;
 
 	//Variables
 	FVector2D MovementVector;
 	
 	FVector2D MouseLookVector;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float InteractionDistance = 1000.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Interaction")
+	float InteractionSphereRadius = 50.0f;
 	
 	float ForwardVectorInputValue = 0.0f; //Прокси-переменная для передачи MovementVector.Y в спринт
 

@@ -7,7 +7,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameplayEffect.h"
-
+#include "Camera/PlayerCameraManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
 
 //Custom UE5 components
 #include "Components/AdvancedMovementComponent.h"
@@ -27,10 +29,13 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	PlayerCameraManager = UGameplayStatics::GetPlayerCameraManager(this, 0);
+
 	
 	if (!GetCharacterMovement())
 		UE_LOG(LogTemp, Error, TEXT("Character Movement component has a nullptr!"))
-	if (AdvancedMovementComponent)
+	if (!AdvancedMovementComponent)
 		UE_LOG(LogTemp, Error, TEXT("Advanced Movement Component has a nullptr!"))
 	
 }
@@ -104,6 +109,51 @@ TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision
 	
 	return ComponentsToIgnore;
 }
+
+
+void APlayerCharacter::Interact()
+{
+	FVector TraceStart(0 ,0 ,0);
+	TraceStart = PlayerCameraManager->GetRootComponent()->GetComponentLocation();
+	FVector TraceEnd(0 ,0 ,0);
+	TraceEnd = TraceStart + InteractionDistance* PlayerCameraManager->GetRootComponent()->GetForwardVector();
+	
+	FCollisionShape TraceShape = FCollisionShape::MakeSphere(InteractionSphereRadius);
+
+	FCollisionQueryParams TraceParams(FName(TEXT("InteractTrace")));
+	TraceParams.bTraceComplex = false; 
+	TraceParams.bReturnPhysicalMaterial = false; 
+	TraceParams.AddIgnoredActor(this);
+
+	ECollisionChannel TraceChannel = ECC_Visibility; 
+	
+	FHitResult OutHit(ForceInit); // для сферного трейса обязательно проинициализировать
+
+	bool bHit = GetWorld()->SweepSingleByChannel(
+		OUT OutHit,
+		TraceStart,
+		TraceEnd,
+		FQuat::Identity, //структура нулевого вращения
+		TraceChannel,
+		TraceShape,
+		TraceParams
+	);
+	
+	//УДАЛИТЬ ПОСЛЕ ДЕБАГА BEGIN
+	DrawDebugLine(GetWorld(), TraceStart, TraceEnd, bHit ? FColor::Green : FColor::Green, false, 1.0f, 0, 2.0f);
+	DrawDebugSphere(GetWorld(), TraceStart, InteractionSphereRadius, 12, FColor::Green, false, 1.0f);
+	DrawDebugSphere(GetWorld(), TraceEnd, InteractionSphereRadius, 12, FColor::Green, false, 1.0f);
+	//УДАЛИТЬ ПОСЛЕ ДЕБАГА END
+	
+	if (bHit)
+	{
+		AActor* HitActor = OutHit.GetActor();
+		if (HitActor)
+			UE_LOG(LogTemp, Log, TEXT("Interact: Hit Actor %s"), *HitActor->GetName());
+	}
+	 
+}
+
 
 //Gameplay Ability System
 

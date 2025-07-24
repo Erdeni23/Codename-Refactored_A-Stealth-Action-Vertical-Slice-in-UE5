@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
-	
+
 #include "GASCharacter.generated.h"
 
 
@@ -13,6 +13,7 @@ class UGameplayAbility;
 class UGameplayEffect;
 class UCustomAbilitySystemComponent;
 class UCustomAttributeSet;
+class ABaseWeapon;
 
 UCLASS()
 class CODENAMEREFACTORED_API AGASCharacter :
@@ -32,6 +33,16 @@ public:
 	
 protected:
 	//Functions
+
+	//Variables
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<ABaseWeapon> CurrentlySwitchedWeapon;
+	
+	//Gameplay Ability System
+public:
+	
+protected:
+	//Functions
 	void GiveDefaultAbilities();
 
 	void InitDefaultAttributes() const;
@@ -39,7 +50,7 @@ protected:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	virtual UCustomAttributeSet* GetAttributeSet() const;
-
+	
 	//Defaults
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;
