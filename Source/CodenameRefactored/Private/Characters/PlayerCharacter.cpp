@@ -27,16 +27,11 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-
+	
 	if (!GetCharacterMovement())
 		UE_LOG(LogTemp, Error, TEXT("Character Movement component has a nullptr!"))
 	if (AdvancedMovementComponent)
 		UE_LOG(LogTemp, Error, TEXT("Advanced Movement Component has a nullptr!"))
-
-
-	//Привязываем изменение хп к событию, для использования в HUD/Blueprint
-	
 	
 }
 

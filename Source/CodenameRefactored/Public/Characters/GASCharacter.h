@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-
+#include "AbilitySystemInterface.h"
+	
 #include "GASCharacter.generated.h"
 
 
@@ -15,7 +16,8 @@ class UCustomAttributeSet;
 
 UCLASS()
 class CODENAMEREFACTORED_API AGASCharacter :
-public ACharacter
+public ACharacter,
+public IAbilitySystemInterface
 
 {
 	GENERATED_BODY()
@@ -34,7 +36,7 @@ protected:
 
 	void InitDefaultAttributes() const;
 	
-	virtual UCustomAbilitySystemComponent* GetAbilitySystemComponent() const;
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	
 	virtual UCustomAttributeSet* GetAttributeSet() const;
 

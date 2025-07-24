@@ -18,6 +18,8 @@ void AGASCharacter::BeginPlay()
 	Super::BeginPlay();
 	if (!AbilitySystemComponent)
 		UE_LOG(LogTemp, Error, TEXT("Ability System Component has a nullptr!"))
+	if (!AttributeSet)
+		UE_LOG(LogTemp, Error, TEXT("Attribute Set has a nullptr!"))
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	GiveDefaultAbilities();
 	InitDefaultAttributes();
@@ -31,7 +33,7 @@ void AGASCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 
 }
 
 
-UCustomAbilitySystemComponent* AGASCharacter::GetAbilitySystemComponent() const
+UAbilitySystemComponent* AGASCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
 }
