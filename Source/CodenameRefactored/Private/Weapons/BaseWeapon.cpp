@@ -24,18 +24,6 @@ void ABaseWeapon::BeginPlay()
 }
 
 
-void ABaseWeapon::PickUp(USkeletalMeshComponent* OwnerSkeletalMeshComponent, bool bEquip)
-{
-	OwnerSkeletalMesh = OwnerSkeletalMeshComponent;
-	SetOwner(OwnerSkeletalMeshComponent->GetOwner());
-	GunOwner = GetOwner();
-	
-	if (bEquip)
-		EquipWeapon(OwnerSkeletalMeshComponent);
-	
-}
-
-
 void ABaseWeapon::ShootWeapon(const FTransform& Transform)
 {
 	AActor* Projectile = ActorPoolSubsystem->SpawnProjectileFromPool(GunOwner, this, Transform);
@@ -46,10 +34,33 @@ void ABaseWeapon::ShootWeapon(const FTransform& Transform)
 }
 
 
-void ABaseWeapon::EquipWeapon(USceneComponent* OwnerSkeletalMeshComponent)
+void ABaseWeapon::EquipWeapon()
 {
+	TObjectPtr<USceneComponent> OwnerAttachableComponent = OwnerSkeletalMesh;
 	SetActorHiddenInGame(false);
-	AttachToComponent(OwnerSkeletalMeshComponent, AttachmentRules, AttachmentSocket);
+	AttachToComponent(OwnerAttachableComponent, AttachmentRules, AttachmentSocket);
 	
 }
+
+void ABaseWeapon::UnequipWeapon()
+{
+	DetachFromActor(DetachmentRules);
+	SetActorHiddenInGame(true);
+}
+
+
+void ABaseWeapon::Interact_Implementation(USkeletalMeshComponent* SkeletalMeshComponent, bool bEquip)
+{
+	OwnerSkeletalMesh = SkeletalMeshComponent;
+	SetOwner(SkeletalMeshComponent->GetOwner());
+	GunOwner = GetOwner();
+	
+	if (bEquip)
+		EquipWeapon();
+	else
+		UnequipWeapon();
+		
+}
+
+
 

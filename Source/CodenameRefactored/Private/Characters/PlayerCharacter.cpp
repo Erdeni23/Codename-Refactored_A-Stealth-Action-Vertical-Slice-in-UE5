@@ -111,12 +111,11 @@ TArray<UPrimitiveComponent*> APlayerCharacter::GetComponentsToIgnoreForCollision
 }
 
 
-void APlayerCharacter::Interact()
+AActor* APlayerCharacter::InteractWithObject()
 {
-	FVector TraceStart(0 ,0 ,0);
-	TraceStart = PlayerCameraManager->GetRootComponent()->GetComponentLocation();
-	FVector TraceEnd(0 ,0 ,0);
-	TraceEnd = TraceStart + InteractionDistance* PlayerCameraManager->GetRootComponent()->GetForwardVector();
+	FVector TraceStart = PlayerCameraManager->GetRootComponent()->GetComponentLocation();
+	
+	FVector TraceEnd = TraceStart + InteractionDistance* PlayerCameraManager->GetRootComponent()->GetForwardVector();
 	
 	FCollisionShape TraceShape = FCollisionShape::MakeSphere(InteractionSphereRadius);
 
@@ -127,7 +126,7 @@ void APlayerCharacter::Interact()
 
 	ECollisionChannel TraceChannel = ECC_Visibility; 
 	
-	FHitResult OutHit(ForceInit); // для сферного трейса обязательно проинициализировать
+	FHitResult OutHit(ForceInit); // для сферического трейса обязательно проинициализировать
 
 	bool bHit = GetWorld()->SweepSingleByChannel(
 		OUT OutHit,
@@ -144,14 +143,24 @@ void APlayerCharacter::Interact()
 	DrawDebugSphere(GetWorld(), TraceStart, InteractionSphereRadius, 12, FColor::Green, false, 1.0f);
 	DrawDebugSphere(GetWorld(), TraceEnd, InteractionSphereRadius, 12, FColor::Green, false, 1.0f);
 	//УДАЛИТЬ ПОСЛЕ ДЕБАГА END
-	
+
+	AActor* HitActor = nullptr;
 	if (bHit)
+		HitActor = OutHit.GetActor();
+	
+	if (HitActor)
 	{
-		AActor* HitActor = OutHit.GetActor();
-		if (HitActor)
-			UE_LOG(LogTemp, Log, TEXT("Interact: Hit Actor %s"), *HitActor->GetName());
+		IInteractInterface* InteractableActor = Cast<IInteractInterface>(HitActor);
+		
+		bool bEquip = false;
+		if (!CurrentlyEquippedWeapon)
+			bEquip = true;
+		
+		if (InteractableActor)
+			InteractableActor->Execute_Interact(HitActor, GetMesh(), bEquip);
 	}
-	 
+	
+	return HitActor;
 }
 
 

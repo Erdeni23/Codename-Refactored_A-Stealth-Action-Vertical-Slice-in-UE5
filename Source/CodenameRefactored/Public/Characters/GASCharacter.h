@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "Interfaces/InteractInterface.h"
 
 #include "GASCharacter.generated.h"
 
@@ -18,7 +19,8 @@ class ABaseWeapon;
 UCLASS()
 class CODENAMEREFACTORED_API AGASCharacter :
 public ACharacter,
-public IAbilitySystemInterface
+public IAbilitySystemInterface,
+public IInteractInterface
 
 {
 	GENERATED_BODY()
@@ -35,8 +37,8 @@ protected:
 	//Functions
 
 	//Variables
-	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<ABaseWeapon> CurrentlySwitchedWeapon;
+	UPROPERTY(BlueprintReadWrite)
+	TObjectPtr<ABaseWeapon> CurrentlyEquippedWeapon;
 	
 	//Gameplay Ability System
 public:

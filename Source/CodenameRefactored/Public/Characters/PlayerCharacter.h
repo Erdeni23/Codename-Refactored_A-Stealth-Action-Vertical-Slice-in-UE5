@@ -39,6 +39,7 @@ public:
 	//Start of IActorPoolInterface
 	virtual TArray<UPrimitiveComponent*> GetComponentsToIgnoreForCollision_Implementation() const override;
 	//End of IActorPoolInterface
+
 	
 	//Actions bind to Input
 	UFUNCTION()
@@ -62,7 +63,7 @@ public:
 protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	void Interact();
+	AActor* InteractWithObject();
 	
     //Components
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
