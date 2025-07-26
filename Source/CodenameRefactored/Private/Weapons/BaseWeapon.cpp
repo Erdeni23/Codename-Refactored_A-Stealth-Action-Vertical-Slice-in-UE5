@@ -3,6 +3,7 @@
 
 #include "Weapons/BaseWeapon.h"
 #include "Subsystems/ActorPoolGameInstanceSubsystem.h"
+#include "Animation/AnimMontage.h"
 
 
 ABaseWeapon::ABaseWeapon()
@@ -20,16 +21,21 @@ void ABaseWeapon::BeginPlay()
 	
 	GameInstance = GetGameInstance();
 	ActorPoolSubsystem = GameInstance->GetSubsystem<UActorPoolGameInstanceSubsystem>();
-	
+	CurrentAmmo = MaxAmmo;
 }
 
 
 void ABaseWeapon::ShootWeapon(const FTransform& Transform)
 {
-	AActor* Projectile = ActorPoolSubsystem->SpawnProjectileFromPool(GunOwner, this, Transform);
+	if (CurrentAmmo > 0)
+	{
+		AActor* Projectile = ActorPoolSubsystem->SpawnProjectileFromPool(GunOwner, this, Transform);
 	
-	if (!Projectile)
-		UE_LOG(LogTemp, Warning, TEXT("Projectile has a nullptr! Please modify Actor Pool Size!"));
+		if (!Projectile)
+			UE_LOG(LogTemp, Warning, TEXT("Projectile has a nullptr! Please modify Actor Pool Size!"));
+
+		CurrentAmmo -=1;
+	}
 	
 }
 
@@ -42,10 +48,19 @@ void ABaseWeapon::EquipWeapon()
 	
 }
 
+
 void ABaseWeapon::UnequipWeapon()
 {
 	DetachFromActor(DetachmentRules);
 	SetActorHiddenInGame(true);
+}
+
+
+void ABaseWeapon::DropWeapon()
+{
+	SetActorHiddenInGame(false);
+	DetachFromActor(DetachmentRules);
+	SetOwner(nullptr);
 }
 
 
@@ -60,6 +75,24 @@ void ABaseWeapon::Interact_Implementation(USkeletalMeshComponent* SkeletalMeshCo
 	else
 		UnequipWeapon();
 		
+}
+
+
+void ABaseWeapon::FinishReload()
+{
+	CurrentAmmo = MaxAmmo;
+}
+
+
+bool ABaseWeapon::CanReload() const
+{
+	return ((CurrentAmmo < MaxAmmo) && (MaxAmmo > 0));
+}
+
+
+float ABaseWeapon::GetFireRate() const
+{
+	return FireRate;
 }
 
 

@@ -32,13 +32,20 @@ public:
 	virtual void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PreviousCustomMode) override;
 
 	virtual void BeginPlay() override;
+
+	TObjectPtr<ABaseWeapon> GetCurrentlyEquippedWeapon();
+
+	FTransform GetShootTransform() const;
 	
 protected:
-	//Functions
-
 	//Variables
 	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<ABaseWeapon> CurrentlyEquippedWeapon;
+
+	//Functions
+	UPROPERTY(BlueprintReadWrite)
+	FTransform ShootTransform;
+	
 	
 	//Gameplay Ability System
 public:

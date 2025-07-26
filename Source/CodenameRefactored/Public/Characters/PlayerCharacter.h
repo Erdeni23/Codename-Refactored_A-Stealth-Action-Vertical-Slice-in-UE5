@@ -13,6 +13,7 @@ class APlayerCameraManager;
 
 //Custom
 class UAdvancedMovementComponent;
+class ABaseWeapon;
 
 
 UCLASS()

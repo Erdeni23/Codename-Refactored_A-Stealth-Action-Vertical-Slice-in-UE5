@@ -9,6 +9,7 @@
 #include "AbilitySystem/CustomAbilitySystemComponent.h"
 
 
+
 AGASCharacter::AGASCharacter()
 {
 	AttributeSet = CreateDefaultSubobject<UCustomAttributeSet>("AttributeSet");
@@ -76,3 +77,17 @@ void AGASCharacter::InitDefaultAttributes() const
 	if (SpecHandle.IsValid())
 		AbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 }
+
+
+TObjectPtr<ABaseWeapon> AGASCharacter::GetCurrentlyEquippedWeapon()
+{
+	return CurrentlyEquippedWeapon;
+}
+
+
+FTransform AGASCharacter::GetShootTransform() const
+{
+	return ShootTransform;
+}
+
+

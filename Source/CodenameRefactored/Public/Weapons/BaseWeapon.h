@@ -13,7 +13,7 @@ class USkeletalMeshComponent;
 class UCapsuleComponent;
 class GameInstance;
 class UActorPoolGameInstanceSubsystem;
-
+class UAnimMontage;
 
 UCLASS(Blueprintable)
 class CODENAMEREFACTORED_API ABaseWeapon :
@@ -30,10 +30,16 @@ public:
 	//Functions
 	UFUNCTION(BlueprintCallable)
 	void ShootWeapon(const FTransform& Transform);
+	
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	virtual bool CanReload() const;
 
 	//Start of IInteractInterface
 	virtual void Interact_Implementation(USkeletalMeshComponent* SkeletalMeshComponent = nullptr, bool bEquip = false) override;
 	//End of IInteractInterface
+
+	float GetFireRate() const;
+
 	
 protected:
 
@@ -55,6 +61,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UCapsuleComponent> OwnerCapsule;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters)
+	TObjectPtr<UAnimMontage> ReloadMontage;
 	
 	//Functions
 	virtual void BeginPlay() override;
@@ -65,12 +74,21 @@ protected:
 	UFUNCTION(BlueprintCallable)
 	void UnequipWeapon();
 
-	//Variables
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponStats)
-	float fireRate = 200.0f;
+	UFUNCTION(BlueprintCallable)
+	void DropWeapon();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponStats)
-	float Ammo = 30.0f;
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	virtual void FinishReload();
+
+	//Variables
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters)
+	float FireRate = 200.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters)
+	float MaxAmmo = 30.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = WeaponParameters)
+	float CurrentAmmo = 30.0f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters);
 	FName AttachmentSocket;

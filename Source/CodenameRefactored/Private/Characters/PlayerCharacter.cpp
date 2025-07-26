@@ -15,6 +15,7 @@
 #include "Components/AdvancedMovementComponent.h"
 #include "AbilitySystem/CustomAttributeSet.h"
 #include "AbilitySystem/CustomAbilitySystemComponent.h"
+#include "Weapons/BaseWeapon.h"
 
 
 APlayerCharacter::APlayerCharacter()
@@ -158,6 +159,9 @@ AActor* APlayerCharacter::InteractWithObject()
 		
 		if (InteractableActor)
 			InteractableActor->Execute_Interact(HitActor, GetMesh(), bEquip);
+
+		if (bEquip)
+			CurrentlyEquippedWeapon = Cast<ABaseWeapon>(HitActor);
 	}
 	
 	return HitActor;
