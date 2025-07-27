@@ -2,6 +2,8 @@
 
 
 #include "Weapons/BaseWeapon.h"
+
+#include "AssetDefinitionAssetInfo.h"
 #include "Subsystems/ActorPoolGameInstanceSubsystem.h"
 #include "Animation/AnimMontage.h"
 
@@ -77,7 +79,6 @@ void ABaseWeapon::Interact_Implementation(USkeletalMeshComponent* SkeletalMeshCo
 		
 }
 
-
 void ABaseWeapon::FinishReload()
 {
 	CurrentAmmo = MaxAmmo;
@@ -87,6 +88,11 @@ void ABaseWeapon::FinishReload()
 bool ABaseWeapon::CanReload() const
 {
 	return ((CurrentAmmo < MaxAmmo) && (MaxAmmo > 0));
+}
+
+TObjectPtr<UAnimMontage> ABaseWeapon::GetReloadMontage()
+{
+	return ReloadMontage;
 }
 
 

@@ -34,11 +34,26 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Weapon)
 	virtual bool CanReload() const;
 
+	UFUNCTION(BlueprintCallable)
+	void EquipWeapon();
+	
+	UFUNCTION(BlueprintCallable)
+	void UnequipWeapon();
+
+	UFUNCTION(BlueprintCallable)
+	void DropWeapon();
+
+	UFUNCTION(BlueprintCallable, Category = Weapon)
+	virtual void FinishReload();
+
+	TObjectPtr<UAnimMontage> GetReloadMontage();
+
+	float GetFireRate() const;
+
 	//Start of IInteractInterface
 	virtual void Interact_Implementation(USkeletalMeshComponent* SkeletalMeshComponent = nullptr, bool bEquip = false) override;
 	//End of IInteractInterface
 
-	float GetFireRate() const;
 
 	
 protected:
@@ -68,21 +83,10 @@ protected:
 	//Functions
 	virtual void BeginPlay() override;
 	
-	UFUNCTION(BlueprintCallable)
-	void EquipWeapon();
-	
-	UFUNCTION(BlueprintCallable)
-	void UnequipWeapon();
-
-	UFUNCTION(BlueprintCallable)
-	void DropWeapon();
-
-	UFUNCTION(BlueprintCallable, Category = Weapon)
-	virtual void FinishReload();
 
 	//Variables
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters)
-	float FireRate = 200.0f;
+	float FireRate = 2000.0f;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters)
 	float MaxAmmo = 30.0f;

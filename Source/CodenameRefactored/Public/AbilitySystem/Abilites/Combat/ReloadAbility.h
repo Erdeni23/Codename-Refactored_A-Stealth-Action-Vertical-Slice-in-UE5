@@ -14,14 +14,15 @@ class AGASCharacter;
 class UAbilitySystemComponent;
 
 
-UCLASS()
+UCLASS(Blueprintable)
 class CODENAMEREFACTORED_API UReloadAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
 
 public:
-	UReloadAbility();
 
+	UReloadAbility();
+	
 	virtual void ActivateAbility
 	(
 	const FGameplayAbilitySpecHandle Handle,
@@ -30,39 +31,20 @@ public:
 	const FGameplayEventData* TriggerEventData
 	) override;
 
-	virtual bool CanActivateAbility
-	(
-	const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayTagContainer* SourceTags = nullptr,
-	const FGameplayTagContainer* TargetTags = nullptr,
-	FGameplayTagContainer* OptionalRelevantTags = nullptr
-	) const override;
-
-	virtual void CancelAbility
-	(
-	const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo,
-	bool bReplicateCancelAbility
-	) override;
-
-	virtual void EndAbility
-	(
-	const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo,
-	bool bReplicateEndAbility,
-	bool bWasCancelled
-	) override;
 
 protected:
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = FireRateCooldown)
-	TSubclassOf<UGameplayEffect> FireRateCooldownClass;
+	UFUNCTION()
+	void OnMontageCompleted();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = FireRateCooldown)
-	float EffectLevel = 1.0f;
+	UFUNCTION()
+	void OnMontageInterrupted();
 
+	UPROPERTY()
+	TObjectPtr<ABaseWeapon> CurrentWeapon;
+
+	UPROPERTY()
+	TObjectPtr<AGASCharacter> Character;
+
+	FActiveGameplayEffectHandle MontageTaskHandle;
 	
 };
