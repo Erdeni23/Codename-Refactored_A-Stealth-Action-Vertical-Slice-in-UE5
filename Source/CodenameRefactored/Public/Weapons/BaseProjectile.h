@@ -63,13 +63,13 @@ protected:
 
 	//Variables
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = ProjectileParameters)
 	float Speed = 8000.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = ProjectileParameters)
 	float TimeToLive = 2.0f;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = ProjectileParameters)
 	float GravityScale = 0.0f;
 
 	UPROPERTY(BlueprintReadOnly)
