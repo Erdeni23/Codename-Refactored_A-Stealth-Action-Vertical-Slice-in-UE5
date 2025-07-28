@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/CustomAttributeSet.h"
-
+#include "GameplayEffectExtension.h"
 
 UCustomAttributeSet::UCustomAttributeSet()
 {

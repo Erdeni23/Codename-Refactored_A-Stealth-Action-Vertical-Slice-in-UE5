@@ -8,7 +8,6 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "TimerManager.h"
 #include "AbilitySystemInterface.h"
-#include "GameplayEffectTypes.h"
 
 //Custom
 #include "AbilitySystemComponent.h"

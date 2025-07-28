@@ -37,6 +37,10 @@ public:
 
 	FTransform GetShootTransform() const;
 	
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
+	virtual UCustomAttributeSet* GetAttributeSet() const;
+
 protected:
 	//Variables
 	UPROPERTY(BlueprintReadWrite)
@@ -55,11 +59,7 @@ protected:
 	void GiveDefaultAbilities();
 
 	void InitDefaultAttributes() const;
-	
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	
-	virtual UCustomAttributeSet* GetAttributeSet() const;
-	
+
 	//Defaults
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> DefaultAbilities;

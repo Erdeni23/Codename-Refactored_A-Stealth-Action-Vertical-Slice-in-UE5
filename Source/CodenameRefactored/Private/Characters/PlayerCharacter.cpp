@@ -15,6 +15,7 @@
 #include "Components/AdvancedMovementComponent.h"
 #include "AbilitySystem/CustomAttributeSet.h"
 #include "AbilitySystem/CustomAbilitySystemComponent.h"
+#include "GameCore/CustomHUD.h"
 #include "Weapons/BaseWeapon.h"
 
 
@@ -38,6 +39,18 @@ void APlayerCharacter::BeginPlay()
 		UE_LOG(LogTemp, Error, TEXT("Character Movement component has a nullptr!"))
 	if (!AdvancedMovementComponent)
 		UE_LOG(LogTemp, Error, TEXT("Advanced Movement Component has a nullptr!"))
+
+	InitHUD();
+}
+
+
+void APlayerCharacter::InitHUD() const
+{
+	if (const APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		if (ACustomHUD* HUD = Cast<ACustomHUD>(PlayerController->GetHUD()))
+			HUD->Init();
+	}
 	
 }
 

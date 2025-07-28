@@ -91,6 +91,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = UpgradableStats)
 	float DefaultSpeed = 600.0f;
+
+private:
+	void InitHUD() const;
 	
 	// Gameplay Ability System 
 public:

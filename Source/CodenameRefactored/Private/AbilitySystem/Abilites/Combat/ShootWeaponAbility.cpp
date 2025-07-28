@@ -5,7 +5,6 @@
 #include "Characters/GASCharacter.h"
 #include "Weapons/BaseWeapon.h"
 #include "AbilitySystemComponent.h"
-#include "Abilities/GameplayAbility.h"
 #include "AbilitySystemBlueprintLibrary.h" // потому что потому
 
 
