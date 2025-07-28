@@ -12,6 +12,9 @@ class UBoxComponent;
 class UProjectileMovementComponent;
 class UStaticMeshComponent;
 class UActorPoolGameInstanceSubsystem;
+class ABaseWeapon;
+class UGameplayEffect;
+class AGASCharacter;
 
 UCLASS(Blueprintable)
 class CODENAMEREFACTORED_API ABaseProjectile : public AActor
@@ -30,7 +33,7 @@ public:
 
 	//Functions
 	UFUNCTION()
-	virtual void ActivateProjectile(AActor* Requester = nullptr, AActor* Weapon = nullptr);
+	virtual void ActivateProjectile(AActor* Requester = nullptr, ABaseWeapon* Weapon = nullptr);
 
 	UFUNCTION()
 	virtual void DeactivateProjectile();
@@ -53,6 +56,9 @@ protected:
 	UPROPERTY()
 	TArray<UPrimitiveComponent*> ComponentsToIgnore;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = ProjectileParameters)
+	TSubclassOf<UGameplayEffect> DamageEffect; 
+
 	FTimerHandle TimeToLiveTimer;
 
 	//Variables
@@ -66,8 +72,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	float GravityScale = 0.0f;
 
-	UPROPERTY()
-	AActor* CurrentWeapon;
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<ABaseWeapon> CurrentWeapon;
 
 	//Functions		
 	virtual void BeginPlay() override;
@@ -75,11 +81,11 @@ protected:
 	UFUNCTION()
 	void OnHit
 		(
-		UPrimitiveComponent* HitComponent,
-		AActor* OtherActor,
-		UPrimitiveComponent* OtherComp,
-		FVector NormalImpulse,
-		const FHitResult& Hit
+		UPrimitiveComponent* HitComponent = nullptr,
+		AActor* OtherActor = nullptr,
+		UPrimitiveComponent* OtherComp = nullptr,
+		FVector NormalImpulse = FVector::ZeroVector,
+		const FHitResult& Hit = FHitResult()
 		);
 
 

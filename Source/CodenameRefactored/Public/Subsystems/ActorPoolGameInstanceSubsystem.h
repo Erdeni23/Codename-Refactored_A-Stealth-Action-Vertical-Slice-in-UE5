@@ -9,7 +9,7 @@
 
 
 class ABaseProjectile;
-
+class ABaseWeapon;
 
 UCLASS(Blueprintable)
 class CODENAMEREFACTORED_API UActorPoolGameInstanceSubsystem : public UGameInstanceSubsystem, public IActorPoolInterface
@@ -42,7 +42,7 @@ public:
 	AActor* SpawnProjectileFromPool
 	   (
 	   AActor* Requester,
-	   AActor* Weapon,
+	   ABaseWeapon* Weapon,
 	   const FTransform& Transform
 	   );
 

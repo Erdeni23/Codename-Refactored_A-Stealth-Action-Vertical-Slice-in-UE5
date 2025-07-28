@@ -7,10 +7,15 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "TimerManager.h"
+#include "AbilitySystemInterface.h"
+#include "GameplayEffectTypes.h"
 
 //Custom
+#include "AbilitySystemComponent.h"
 #include "Subsystems/ActorPoolGameInstanceSubsystem.h"
 #include "Interfaces/ActorPoolInterface.h"
+#include "Weapons/BaseWeapon.h"
+
 
 
 ABaseProjectile::ABaseProjectile()
@@ -38,7 +43,7 @@ ABaseProjectile::ABaseProjectile()
 }
 
 
-void ABaseProjectile::ActivateProjectile(AActor* Requester, AActor* Weapon)
+void ABaseProjectile::ActivateProjectile(AActor* Requester, ABaseWeapon* Weapon)
 {
 	
 	if (!Weapon)
@@ -135,8 +140,52 @@ void ABaseProjectile::OnHit
 	UPrimitiveComponent* OtherComp, 
 	FVector NormalImpulse, 
 	const FHitResult& Hit
-	) 
+	)
 {
-	DeactivateProjectile();
+	if (!OtherActor)
+	{
+		DeactivateProjectile();
+		return;
+	}
 	
+	if (OtherActor == this)
+	{
+		DeactivateProjectile();
+		return;
+	}
+	
+	if (!Cast<IAbilitySystemInterface>(OtherActor))
+	{
+		DeactivateProjectile();
+		return;
+	}
+	
+	UAbilitySystemComponent* ShooterASC = GetOwner()->FindComponentByClass<UAbilitySystemComponent>();
+	if (!ShooterASC)
+	{
+		DeactivateProjectile();
+		return;
+	}
+	
+	UAbilitySystemComponent* TargetASC = Cast<IAbilitySystemInterface>(OtherActor)->GetAbilitySystemComponent();
+	if (!TargetASC)
+	{
+		DeactivateProjectile();
+		return;
+	}
+	
+	FGameplayEffectContextHandle EffectContextHandle = ShooterASC->MakeEffectContext();
+	
+	EffectContextHandle.AddSourceObject(this);
+	
+	FGameplayEffectSpecHandle EffectSpecHandle =
+		ShooterASC->MakeOutgoingSpec(DamageEffect, 1.0f, EffectContextHandle);
+
+	float DamageCalculation = -CurrentWeapon->GetDamage();
+	FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag(FName("Damage.Physical"));
+	EffectSpecHandle.Data->SetByCallerTagMagnitudes.Add(DamageTag, DamageCalculation);
+	
+	TargetASC->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+	
+	DeactivateProjectile();
 }

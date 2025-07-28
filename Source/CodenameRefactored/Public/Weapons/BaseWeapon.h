@@ -50,6 +50,10 @@ public:
 
 	float GetFireRate() const;
 
+	float GetMaxAmmo() const;
+	
+	float GetDamage() const;
+
 	//Start of IInteractInterface
 	virtual void Interact_Implementation(USkeletalMeshComponent* SkeletalMeshComponent = nullptr, bool bEquip = false) override;
 	//End of IInteractInterface
@@ -90,6 +94,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters)
 	float MaxAmmo = 30.0f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = WeaponParameters)
+	float Damage = 10.0f;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = WeaponParameters)
 	float CurrentAmmo = 30.0f;

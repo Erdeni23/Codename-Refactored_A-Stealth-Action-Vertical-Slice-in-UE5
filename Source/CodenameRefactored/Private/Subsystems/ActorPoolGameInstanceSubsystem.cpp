@@ -5,6 +5,7 @@
 #include "Weapons/BaseProjectile.h"
 #include "TimerManager.h"
 #include "Containers/Queue.h"
+#include "Weapons/BaseWeapon.h"
 
 bool UActorPoolGameInstanceSubsystem::ShouldCreateSubsystem(UObject* Outer) const 
 {
@@ -77,7 +78,7 @@ void UActorPoolGameInstanceSubsystem::Deinitialize()
 AActor* UActorPoolGameInstanceSubsystem::SpawnProjectileFromPool
 	(
 	AActor* Requester,
-	AActor* Weapon,
+	ABaseWeapon* Weapon,
 	const FTransform& Transform
 	)
 {

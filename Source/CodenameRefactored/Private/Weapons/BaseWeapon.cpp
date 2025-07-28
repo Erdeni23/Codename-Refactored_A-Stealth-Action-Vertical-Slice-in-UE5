@@ -101,5 +101,15 @@ float ABaseWeapon::GetFireRate() const
 	return FireRate;
 }
 
+float ABaseWeapon::GetMaxAmmo() const
+{
+	return MaxAmmo;
+}
+
+float ABaseWeapon::GetDamage() const
+{
+	return Damage;
+}
+
 
 
